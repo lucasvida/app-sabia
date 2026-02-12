@@ -1,15 +1,24 @@
-import { BackgroundDecoration } from "@/components/home/BackgroundDecoration";
-import { HeroSection } from "@/components/home/HeroSection";
-import { LoginCard } from "@/components/home/LoginCard";
+import { HomeHeader } from "@/components/home/HomeHeader";
+import { NewHeroSection } from "@/components/home/NewHeroSection";
+import { HeroImage } from "@/components/home/HeroImage";
+import { Footer } from "@/components/home/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <BackgroundDecoration />
-      <main className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center z-10">
-        <HeroSection />
-        <LoginCard />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 flex flex-col">
+      <HomeHeader />
+      
+      {/* Hero Section */}
+      <main className="flex-1 pt-40 pb-20 px-6 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-start min-h-[60vh]">
+          <NewHeroSection />
+          <div className="relative w-full flex items-center justify-center lg:justify-end">
+            <HeroImage />
+          </div>
+        </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

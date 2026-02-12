@@ -92,9 +92,9 @@ export function ChatMain() {
       : "Nova conversa";
 
   return (
-    <main className="relative flex flex-1 flex-col bg-white dark:bg-background-dark/50">
+    <main className="relative flex flex-1 flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Top Bar */}
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-100 bg-white/80 px-6 backdrop-blur-md dark:border-white/5 dark:bg-background-dark/80">
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
             Conversa atual:
@@ -106,14 +106,14 @@ export function ChatMain() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5"
+            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
             aria-label="Exportar"
           >
             <span className="material-icons-outlined">ios_share</span>
           </button>
           <button
             type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500 dark:hover:bg-white/5"
+            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500 dark:hover:bg-white/5 cursor-pointer"
             aria-label="Limpar chat"
           >
             <span className="material-icons-outlined">delete_outline</span>
@@ -156,7 +156,7 @@ export function ChatMain() {
                 />
               </div>
               <div className="flex-1 space-y-2 text-right">
-                <div className="inline-block max-w-[85%] rounded-2xl rounded-tr-none bg-primary/20 p-4 text-left text-gray-900 dark:text-white">
+                <div className="inline-block max-w-[85%] rounded-md rounded-tr-none bg-primary/20 p-4 text-left text-gray-900 dark:text-white">
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                 </div>
               </div>
@@ -177,7 +177,7 @@ export function ChatMain() {
               </div>
               <div className="flex-1 space-y-2">
                 <span className="font-bold text-gray-900 dark:text-white">Sabiá</span>
-                <div className="markdown-content prose prose-sm max-w-none rounded-2xl rounded-tl-none border border-gray-100 bg-white p-6 text-gray-700 shadow-sm dark:border-white/5 dark:bg-neutral-surface-dark dark:text-gray-300">
+                <div className="markdown-content prose prose-sm max-w-none rounded-md rounded-tl-none border border-slate-200 bg-white p-6 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
                   <div className="whitespace-pre-wrap">{msg.content}</div>
                 </div>
               </div>
@@ -192,14 +192,14 @@ export function ChatMain() {
                 <span className="material-icons-outlined text-lg text-white">smart_toy</span>
               </div>
             </div>
-            <div className="flex-1 rounded-2xl rounded-tl-none border border-gray-100 bg-white p-6 dark:border-white/5 dark:bg-neutral-surface-dark">
+            <div className="flex-1 rounded-md rounded-tl-none border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
               <span className="text-gray-500 dark:text-gray-400">Sabiá está pensando...</span>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="mx-auto max-w-4xl rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
+          <div className="mx-auto max-w-4xl rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
             {error}
           </div>
         )}
@@ -208,15 +208,15 @@ export function ChatMain() {
       </div>
 
       {/* Input */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-6 dark:from-background-dark dark:via-background-dark">
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-6 dark:from-slate-950 dark:via-slate-950">
         <div className="pointer-events-auto mx-auto max-w-4xl">
           <form
             onSubmit={handleSubmit}
-            className="relative flex items-end gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl transition-shadow focus-within:ring-2 focus-within:ring-primary/50 dark:border-white/10 dark:bg-neutral-surface-dark"
+            className="relative flex items-end gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-xl transition-shadow focus-within:ring-2 focus-within:ring-primary/50 dark:border-slate-800 dark:bg-slate-900"
           >
             <button
               type="button"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
               aria-label="Anexar"
             >
               <span className="material-icons-outlined">attach_file</span>
@@ -233,7 +233,7 @@ export function ChatMain() {
             <button
               type="submit"
               disabled={loading || !message.trim()}
-              className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-black shadow-lg shadow-primary/20 transition-transform hover:bg-primary-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary text-black shadow-lg shadow-primary/20 transition-transform hover:bg-primary-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               aria-label="Enviar"
             >
               <span className="material-icons-outlined transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">

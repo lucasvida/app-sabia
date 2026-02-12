@@ -84,3 +84,33 @@
 .markdown-content p:last-child {
   margin-bottom: 0;
 }
+
+/* Animação shimmer para efeito hero */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+/* Animação sutil "mensagem recebida" - uma vez ao entrar ou ao hover */
+@keyframes message-received {
+  0% {
+    opacity: 0;
+    transform: translate(0.5rem, 0.5rem) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-message-received {
+  animation: message-received 0.5s ease-out 1 both;
+}

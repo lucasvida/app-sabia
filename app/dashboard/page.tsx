@@ -92,14 +92,14 @@ export default function DashboardPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-neutral-surface-dark"
+                className="group relative overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-neutral-surface-dark cursor-pointer"
               >
                 <div
                   className={`absolute -right-4 -top-4 h-24 w-24 rounded-bl-full transition-transform group-hover:scale-110 ${item.blob}`}
                 />
                 <div className="relative z-10">
                   <div
-                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300 ${item.iconBg}`}
+                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-md transition-colors duration-300 ${item.iconBg}`}
                   >
                     <span className="material-icons-round text-2xl">
                       {item.icon}
@@ -126,12 +126,12 @@ export default function DashboardPage() {
             </h3>
             <Link
               href="/dashboard/historico"
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-sm font-medium text-primary hover:underline cursor-pointer"
             >
               Ver tudo
             </Link>
           </div>
-          <div className="divide-y divide-slate-100 rounded-2xl border border-slate-100 bg-white shadow-sm dark:divide-slate-800 dark:border-slate-800 dark:bg-neutral-surface-dark">
+          <div className="divide-y divide-slate-100 rounded-md border border-slate-100 bg-white shadow-sm dark:divide-slate-800 dark:border-slate-800 dark:bg-neutral-surface-dark">
             {recentItems.map((item) => (
               <Link
                 key={item.title}
@@ -139,7 +139,7 @@ export default function DashboardPage() {
                 className="group flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
               >
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconBg}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${item.iconBg}`}
                 >
                   <span className="material-icons-round">{item.icon}</span>
                 </div>

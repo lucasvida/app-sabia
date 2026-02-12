@@ -31,7 +31,7 @@ export function ThemeSelector() {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors shadow-sm"
+        className="flex items-center gap-2 px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors shadow-sm cursor-pointer"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label="Selecionar tema"
@@ -46,7 +46,7 @@ export function ThemeSelector() {
       {open && (
         <ul
           role="listbox"
-          className="absolute right-0 mt-2 w-40 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg z-30"
+          className="absolute right-0 mt-2 w-40 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg z-30"
           aria-label="Opções de tema"
         >
           {options.map((opt) => (
@@ -57,7 +57,7 @@ export function ThemeSelector() {
                   setTheme(opt.value);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-left text-sm transition-colors ${
+                className={`w-full flex items-center gap-2 px-3 py-2 text-left text-sm transition-colors cursor-pointer ${
                   theme === opt.value
                     ? "bg-primary/15 text-green-800 dark:text-green-300 font-medium"
                     : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"

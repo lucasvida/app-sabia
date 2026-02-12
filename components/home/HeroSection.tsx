@@ -23,11 +23,11 @@ export function HeroSection() {
       </h1>
 
       <p className="text-lg text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
-        O Sabiá ajuda você a planejar aulas, corrigir atividades e inspirar seus
-        alunos com o poder da inteligência artificial.
+        O Sabiá ajuda você a planejar aulas e inspirar seus
+        alunos com o poder da inteligência artificial feito para educadores.
       </p>
 
-      <div className="relative w-full max-w-md aspect-4/3 rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border-4 border-white dark:border-slate-800 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+      <div className="relative w-full max-w-md aspect-4/3 rounded-md overflow-hidden shadow-2xl shadow-primary/20 border-4 border-white dark:border-slate-800 transform rotate-2 hover:rotate-0 transition-transform duration-500">
         <Image
           src={BOOK_IMAGE}
           alt="Livro aberto simbolizando educação"

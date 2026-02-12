@@ -22,11 +22,11 @@ const historySemana = [
 
 export function ChatSidebar() {
   return (
-    <aside className="relative z-20 flex w-80 flex-col border-r border-gray-200 bg-white dark:border-white/10 dark:bg-neutral-surface-dark transition-colors duration-300">
+    <aside className="relative z-20 flex w-80 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 transition-colors duration-300">
       {/* Header */}
       <div className="border-b border-gray-100 p-5 dark:border-white/5">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-tr from-primary to-yellow-300 text-xl font-bold text-black shadow-lg shadow-primary/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-linear-to-tr from-primary to-yellow-300 text-xl font-bold text-black shadow-lg shadow-primary/20">
             S
           </div>
           <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -35,7 +35,7 @@ export function ChatSidebar() {
         </div>
         <Link
           href="/chat"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 px-4 font-semibold text-black shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark active:scale-95"
+          className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 px-4 font-semibold text-black shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark active:scale-95 cursor-pointer"
         >
           <span className="material-icons-outlined">add</span>
           Nova Conversa
@@ -53,7 +53,7 @@ export function ChatSidebar() {
               <li key={item.id}>
                 <Link
                   href="#"
-                  className={`flex items-center gap-3 rounded-lg border-l-4 px-3 py-3 text-sm transition-colors ${
+                  className={`flex items-center gap-3 rounded-md border-l-4 px-3 py-3 text-sm transition-colors cursor-pointer ${
                     item.active
                       ? "border-primary bg-gray-100 text-gray-900 dark:bg-white/5 dark:text-white"
                       : "border-transparent text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5"
@@ -77,7 +77,7 @@ export function ChatSidebar() {
               <li key={item.id}>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg border-l-4 border-transparent px-3 py-3 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5"
+                  className="flex items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-3 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5 cursor-pointer"
                 >
                   <span className="material-icons-outlined text-lg text-gray-400">
                     {item.icon}
@@ -97,7 +97,7 @@ export function ChatSidebar() {
               <li key={item.id}>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg border-l-4 border-transparent px-3 py-3 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5"
+                  className="flex items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-3 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5 cursor-pointer"
                 >
                   <span className="material-icons-outlined text-lg text-gray-400">
                     {item.icon}
@@ -111,7 +111,7 @@ export function ChatSidebar() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 bg-gray-50 p-4 dark:border-white/5 dark:bg-black/20">
+      <div className="border-t border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-4 flex items-center gap-3">
           <Image
             src={PROFILE_IMAGE}
@@ -131,7 +131,7 @@ export function ChatSidebar() {
           </div>
           <Link
             href="/dashboard/configuracoes"
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
             aria-label="Configurações"
           >
             <span className="material-icons-outlined">settings</span>
@@ -139,7 +139,7 @@ export function ChatSidebar() {
         </div>
         <Link
           href="/dashboard"
-          className="flex w-full items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white"
+          className="flex w-full items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white cursor-pointer"
         >
           <span className="material-icons-outlined text-lg">arrow_back</span>
           Voltar ao Dashboard

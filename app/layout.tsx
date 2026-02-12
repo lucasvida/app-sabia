@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     "Assistente Pedagógico Inteligente. Planeje aulas, corrija atividades e inspire seus alunos.",
   icons: {
     icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
   },
 };
 
@@ -26,6 +28,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
@@ -55,7 +59,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${lexend.variable} font-display bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen antialiased`}
+        className={`${lexend.variable} font-display bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white min-h-screen antialiased transition-colors duration-300`}
       >
         <ClientLayout>{children}</ClientLayout>
       </body>

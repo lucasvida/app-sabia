@@ -2,24 +2,36 @@
 
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "./ThemeProvider";
-import { Header } from "@/components/layout/Header";
+import { HomeHeader } from "@/components/home/HomeHeader";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
   const isChat = pathname?.startsWith("/chat");
+  const isLogin = pathname === "/login";
+  const isHome = pathname === "/";
 
   return (
     <ThemeProvider>
       {isDashboard ? (
         <DashboardLayout>{children}</DashboardLayout>
       ) : isChat ? (
-        children
+        <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+          {children}
+        </div>
+      ) : isLogin ? (
+        <main className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+          {children}
+        </main>
+      ) : isHome ? (
+        <>{children}</>
       ) : (
         <>
-          <Header />
-          <main>{children}</main>
+          <HomeHeader />
+          <main className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+            {children}
+          </main>
         </>
       )}
     </ThemeProvider>

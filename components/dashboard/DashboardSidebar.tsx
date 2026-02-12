@@ -30,10 +30,14 @@ export function DashboardSidebar() {
     <aside className="flex h-auto w-full shrink-0 flex-col justify-between border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-neutral-surface-dark md:h-screen md:w-64 md:sticky md:top-0 z-20">
       <div>
         <div className="flex items-center gap-3 p-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/30">
-            <span className="material-icons-round text-background-dark text-2xl">
-              flutter_dash
-            </span>
+          <div className="relative h-10 w-10">
+            <Image
+              src="/favicon.png"
+              alt="Sabiá"
+              fill
+              className="object-contain"
+              unoptimized
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Sabiá
@@ -49,7 +53,7 @@ export function DashboardSidebar() {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
+                className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors cursor-pointer ${
                   isActive
                     ? "bg-primary/10 font-semibold text-primary-dark dark:text-primary"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
@@ -65,7 +69,7 @@ export function DashboardSidebar() {
       <div className="border-t border-slate-100 dark:border-slate-800 p-4 space-y-1">
         <Link
           href="/dashboard/configuracoes"
-          className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+          className="flex items-center gap-3 rounded-md px-4 py-3 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
         >
           <div className="relative shrink-0">
             <Image
@@ -91,7 +95,7 @@ export function DashboardSidebar() {
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+          className="flex w-full items-center gap-3 rounded-md px-4 py-3 text-left text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
         >
           <span className="material-icons-round">logout</span>
           <span className="text-sm font-medium">Sair</span>
