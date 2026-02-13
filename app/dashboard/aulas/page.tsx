@@ -160,7 +160,7 @@ export default function AulasPage() {
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <span className="text-slate-500 dark:text-slate-400">
-                  {formatDate(aula.data_aula ?? aula.created_at)}
+                  {formatDate((aula.data_aula as string) ?? (aula.created_at as string))}
                 </span>
                 <Link
                   href={`/aulas/${aula.id}`}
