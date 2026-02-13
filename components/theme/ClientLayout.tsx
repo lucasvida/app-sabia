@@ -29,7 +29,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
       ) : (
         <>
           <HomeHeader />
-          <main className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+          <main className="bg-slate-50 dark:bg-slate-950 pt-16 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen md:pt-20">
             {children}
           </main>
         </>
