@@ -75,11 +75,11 @@ export function LoginCard() {
         <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-primary to-yellow-300" />
 
         <div className="text-center mb-8 flex flex-col items-center">
-          <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity mb-4">
+          <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity mb-4" aria-label="Sabiá - Voltar à página inicial">
             <div className="relative h-20 w-auto">
               <Image
                 src="/logo-sabia.png"
-                alt="Sabiá Logo"
+                alt="Logo do Sabiá - assistente pedagógico inteligente"
                 width={200}
                 height={80}
                 className="object-contain h-full w-auto"

@@ -9,7 +9,7 @@ export function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col md:flex-row bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
       <DashboardSidebar />
       <main className="flex flex-1 flex-col overflow-hidden">
         <DashboardTopBar />

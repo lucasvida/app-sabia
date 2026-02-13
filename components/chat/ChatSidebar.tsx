@@ -115,7 +115,7 @@ export function ChatSidebar() {
         <div className="mb-4 flex items-center gap-3">
           <Image
             src={PROFILE_IMAGE}
-            alt="Perfil"
+            alt="Foto de perfil do usuário"
             className="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm dark:border-gray-700"
             width={40}
             height={40}
@@ -140,8 +140,9 @@ export function ChatSidebar() {
         <Link
           href="/dashboard"
           className="flex w-full items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white cursor-pointer"
+          aria-label="Voltar ao Dashboard"
         >
-          <span className="material-icons-outlined text-lg">arrow_back</span>
+          <span className="material-icons-outlined text-lg" aria-hidden="true">arrow_back</span>
           Voltar ao Dashboard
         </Link>
       </div>

@@ -38,12 +38,12 @@ export function DashboardChatCTA() {
               Precisa de um plano de aula criativo, uma lista de exercícios ou
               apenas brainstorming? O Sabiá está pronto para voar com você.
             </p>
-            <form onSubmit={handleSubmit} className="relative w-full max-w-xl transition-shadow duration-300 group-hover:shadow-lg">
+            <form onSubmit={handleSubmit} className="relative w-full max-w-2xl transition-shadow duration-300 group-hover:shadow-lg">
               <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                 <div className="relative w-6 h-6">
                   <Image
                     src="/favicon.png"
-                    alt="Sabiá"
+                    alt="Ícone do Sabiá"
                     fill
                     className="object-contain"
                     unoptimized
@@ -53,7 +53,7 @@ export function DashboardChatCTA() {
               <input
                 type="text"
                 placeholder="Digite aqui... ex: 'Crie um quiz sobre a Amazônia para o 5º ano'"
-                className="block w-full rounded-md border-2 border-slate-100 bg-slate-50 py-4 pl-12 pr-32 font-medium text-slate-900 shadow-sm placeholder-slate-400 transition-all focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                className="block w-full rounded-md border-2 border-slate-100 bg-slate-50 py-4 pl-12 pr-36 font-medium text-slate-900 shadow-sm placeholder-slate-400 transition-all focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
               />
@@ -77,7 +77,7 @@ export function DashboardChatCTA() {
             <div className="absolute inset-0 rounded-full bg-linear-to-br from-primary/30 to-yellow-200/30 blur-2xl" />
             <Image
               src={ILLUSTRATION_URL}
-              alt="Ilustração Sabiá"
+              alt="Ilustração do assistente Sabiá - educação e tecnologia"
               className="relative z-10 h-full w-full rounded-md object-contain opacity-90 drop-shadow-2xl mix-blend-hard-light"
               width={192}
               height={192}

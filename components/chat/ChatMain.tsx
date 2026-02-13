@@ -148,7 +148,7 @@ export function ChatMain() {
               <div className="shrink-0">
                 <Image
                   src={USER_AVATAR}
-                  alt="Você"
+                  alt="Avatar do usuário"
                   className="h-10 w-10 rounded-full object-cover shadow-sm"
                   width={40}
                   height={40}
@@ -167,7 +167,7 @@ export function ChatMain() {
                 <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-primary to-green-600 shadow-md">
                   <Image
                     src={AI_AVATAR}
-                    alt="Sabiá"
+                    alt="Avatar do assistente Sabiá"
                     className="h-full w-full object-cover opacity-90 mix-blend-overlay"
                     width={40}
                     height={40}

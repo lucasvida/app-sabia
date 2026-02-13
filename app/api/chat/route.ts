@@ -20,11 +20,17 @@ export async function POST(request: Request) {
       data: { user },
     } = await supabase.auth.getUser();
     const user_session_id = user?.id ?? "";
+    const nome_professor =
+      user?.user_metadata?.full_name ??
+      user?.user_metadata?.name ??
+      user?.user_metadata?.display_name ??
+      user?.email?.split("@")[0] ??
+      "";
 
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, user_session_id }),
+      body: JSON.stringify({ message, user_session_id, nome_professor }),
     });
 
     if (!res.ok) {

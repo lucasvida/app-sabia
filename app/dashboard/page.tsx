@@ -1,18 +1,22 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { DashboardChatCTA } from "@/components/dashboard/DashboardChatCTA";
+import { createClient } from "@/lib/supabase/client";
 
 const quickAccess = [
   {
-    href: "/dashboard/turmas",
-    title: "Minhas Turmas",
-    description: "Gerencie alunos, notas e presença.",
-    icon: "groups",
+    href: "/dashboard/aulas",
+    title: "Minhas Aulas",
+    description: "Gerencie suas aulas e planejamentos.",
+    icon: "class",
     iconBg: "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white",
     blob: "bg-blue-50 dark:bg-blue-900/10",
   },
   {
     href: "/dashboard/planejamento",
-    title: "Planejamento",
+    title: "Meus Planejamentos",
     description: "Crie planos de aula detalhados com IA.",
     icon: "edit_calendar",
     iconBg: "bg-primary/20 text-primary-dark dark:text-primary group-hover:bg-primary group-hover:text-background-dark",
@@ -20,7 +24,7 @@ const quickAccess = [
   },
   {
     href: "/dashboard/quizzes",
-    title: "Quizzes",
+    title: "Meus Quizzes",
     description: "Gere avaliações e exercícios rápidos.",
     icon: "quiz",
     iconBg: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 group-hover:bg-yellow-400 group-hover:text-yellow-900",
@@ -58,6 +62,27 @@ const recentItems = [
 ];
 
 export default function DashboardPage() {
+  const [userName, setUserName] = useState<string>("Professor(a)");
+
+  useEffect(() => {
+    async function fetchUser() {
+      const supabase = createClient();
+      if (!supabase) return;
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Tenta pegar o nome do user_metadata ou email
+        const name = user.user_metadata?.full_name || 
+                     user.user_metadata?.name || 
+                     user.user_metadata?.display_name ||
+                     user.email?.split("@")[0] || 
+                     "Professor(a)";
+        setUserName(name);
+      }
+    }
+    fetchUser();
+  }, []);
+
   return (
     <>
         {/* Welcome */}
@@ -65,7 +90,7 @@ export default function DashboardPage() {
           <div className="mb-2 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
             <div>
               <h2 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">
-                Olá, Professor(a)!{" "}
+                Olá, {userName}!{" "}
                 <span className="inline-block animate-pulse">👋</span>
               </h2>
               <p className="text-lg text-slate-600 dark:text-slate-400">

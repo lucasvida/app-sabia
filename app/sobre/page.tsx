@@ -191,7 +191,7 @@ export default function SobrePage() {
                   <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-full ring-2 ring-primary/20">
                     <Image
                       src={member.photo}
-                      alt={member.name}
+                      alt={`Foto de ${member.name}`}
                       width={96}
                       height={96}
                       className="h-full w-full object-cover"

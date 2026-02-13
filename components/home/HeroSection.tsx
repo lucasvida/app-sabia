@@ -30,7 +30,7 @@ export function HeroSection() {
       <div className="relative w-full max-w-md aspect-4/3 rounded-md overflow-hidden shadow-2xl shadow-primary/20 border-4 border-white dark:border-slate-800 transform rotate-2 hover:rotate-0 transition-transform duration-500">
         <Image
           src={BOOK_IMAGE}
-          alt="Livro aberto simbolizando educação"
+          alt="Livro aberto simbolizando educação e conhecimento"
           className="object-cover w-full h-full opacity-90 hover:scale-105 transition-transform duration-700"
           width={640}
           height={480}

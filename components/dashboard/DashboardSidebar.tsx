@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,14 +11,36 @@ const PROFILE_IMAGE =
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/dashboard/turmas", label: "Minhas Turmas", icon: "class" },
-  { href: "/dashboard/atividades", label: "Atividades", icon: "assignment" },
-  { href: "/dashboard/conteudos", label: "Conteúdos", icon: "library_books" },
+  { href: "/dashboard/aulas", label: "Minhas Aulas", icon: "class" },
+  { href: "/dashboard/planejamento", label: "Meus Planejamentos", icon: "edit_calendar" },
+  { href: "/dashboard/quizzes", label: "Meus Quizzes", icon: "quiz" },
 ];
+
+function getFirstName(fullName: string | undefined, email: string | undefined): string {
+  if (fullName?.trim()) {
+    const first = fullName.trim().split(/\s+/)[0];
+    return first || "Professor(a)";
+  }
+  if (email) return email.split("@")[0] || "Professor(a)";
+  return "Professor(a)";
+}
 
 export function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [displayName, setDisplayName] = useState("Prof. …");
+
+  useEffect(() => {
+    async function loadUser() {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      const name = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? user?.user_metadata?.display_name;
+      const first = getFirstName(name, user?.email ?? undefined);
+      setDisplayName(`Prof. ${first}`);
+    }
+    loadUser();
+  }, []);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -27,22 +50,21 @@ export function DashboardSidebar() {
   }
 
   return (
-    <aside className="flex h-auto w-full shrink-0 flex-col justify-between border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-neutral-surface-dark md:h-screen md:w-64 md:sticky md:top-0 z-20">
+    <aside className="flex h-auto w-full shrink-0 flex-col justify-between border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 md:h-screen md:w-64 md:sticky md:top-0 z-20">
       <div>
-        <div className="flex items-center gap-3 p-6">
-          <div className="relative h-10 w-10">
+        <Link href="/dashboard" className="flex items-center justify-center gap-3 p-6 cursor-pointer hover:opacity-80 transition-opacity" aria-label="Sabiá - Voltar ao dashboard">
+          <div className="relative h-16 w-auto">
             <Image
-              src="/favicon.png"
-              alt="Sabiá"
-              fill
-              className="object-contain"
+              src="/logo-sabia.png"
+              alt="Logo do Sabiá - assistente pedagógico inteligente"
+              width={180}
+              height={64}
+              className="object-contain h-full w-auto"
               unoptimized
+              priority
             />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Sabiá
-          </h1>
-        </div>
+        </Link>
         <nav className="space-y-1 px-4 py-2">
           {navItems.map(({ href, label, icon }) => {
             const isActive =
@@ -70,11 +92,12 @@ export function DashboardSidebar() {
         <Link
           href="/dashboard/configuracoes"
           className="flex items-center gap-3 rounded-md px-4 py-3 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+          aria-label={`Configurações da conta - ${displayName}`}
         >
           <div className="relative shrink-0">
             <Image
               src={PROFILE_IMAGE}
-              alt="Foto do professor"
+              alt="Foto de perfil do professor"
               className="h-8 w-8 rounded-full object-cover"
               width={32}
               height={32}
@@ -84,7 +107,7 @@ export function DashboardSidebar() {
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-slate-900 dark:text-white">
-              Profa. Mariana
+              {displayName}
             </p>
             <p className="truncate text-xs text-slate-500 dark:text-slate-500">
               Configurações

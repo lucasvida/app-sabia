@@ -27,7 +27,7 @@ export function Header() {
           <div className="relative h-10 w-auto">
             <Image
               src="/logo-sabia.png"
-              alt="Sabiá Logo"
+              alt="Logo do Sabiá - assistente pedagógico inteligente"
               width={120}
               height={40}
               className="object-contain h-full w-auto"

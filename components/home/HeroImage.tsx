@@ -8,7 +8,7 @@ export function HeroImage() {
         <div className="absolute inset-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
           <Image
             src="/cover-home.png"
-            alt="Sabiá - capa"
+            alt="Estudantes em sala de aula - capa do site Sabiá"
             className="w-full h-full object-cover object-center"
             fill
             unoptimized
@@ -20,10 +20,11 @@ export function HeroImage() {
         <div
           className="absolute -bottom-10 -right-6 w-[88%] max-w-sm rounded-xl p-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-white/40 dark:border-slate-500/40 translate-x-5 translate-y-2 animate-message-received hover:scale-[1.02] hover:shadow-xl transition-transform transition-shadow duration-200 cursor-default"
           style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.08)" }}
-          role="tooltip"
+          role="complementary"
+          aria-label="Sugestão do Sabiá: Vamos criar um quiz interativo sobre sustentabilidade?"
         >
           <div className="flex items-start gap-3">
-            <div className="shrink-0 w-10 h-10 bg-primary/90 rounded-lg flex items-center justify-center shadow-lg">
+            <div className="shrink-0 w-10 h-10 bg-primary/90 rounded-lg flex items-center justify-center shadow-lg" aria-hidden="true">
               <span className="material-icons-outlined text-white text-xl">chat_bubble_outline</span>
             </div>
             <div className="flex-1 min-w-0">

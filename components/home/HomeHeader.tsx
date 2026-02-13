@@ -52,11 +52,12 @@ export function HomeHeader() {
           <Link
             href="/"
             className="flex items-center gap-3 group cursor-pointer"
+            aria-label="Sabiá - Ir para a página inicial"
           >
             <div className="relative h-16 md:h-18 w-auto group-hover:scale-110 transition-transform">
               <Image
                 src="/logo-sabia.png"
-                alt="Sabiá Logo"
+                alt="Logo do Sabiá - assistente pedagógico inteligente"
                 width={192}
                 height={72}
                 className="object-contain h-full w-auto"

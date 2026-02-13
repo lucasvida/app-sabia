@@ -11,7 +11,7 @@ export function NewHeroSection() {
         <div className="relative w-4 h-4">
           <Image
             src="/favicon.png"
-            alt="Sabiá"
+            alt="Ícone do Sabiá - assistente pedagógico inteligente"
             fill
             className="object-contain"
             unoptimized

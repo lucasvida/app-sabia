@@ -52,37 +52,72 @@
   background-color: #334155;
 }
 
-/* Conteúdo tipo markdown no chat */
-.markdown-content h2 {
-  font-size: 1.25rem;
+/* Conteúdo tipo markdown / HTML renderizado */
+.markdown-content h1,
+.aula-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.markdown-content h2,
+.aula-content h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+.markdown-content h3,
+.aula-content h3 {
+  font-size: 1.15rem;
   font-weight: 600;
   margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: inherit;
+  margin-bottom: 0.5rem;
 }
-.markdown-content h4 {
-  font-size: 0.875rem;
+.markdown-content h4,
+.aula-content h4 {
+  font-size: 1rem;
   font-weight: 600;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   margin-bottom: 0.25rem;
-  color: inherit;
 }
-.markdown-content ul {
+.markdown-content ul,
+.aula-content ul {
   list-style-type: disc;
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
-.markdown-content li {
-  margin-bottom: 0.25rem;
+.markdown-content ol,
+.aula-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
 }
-.markdown-content strong {
+.markdown-content li,
+.aula-content li {
+  margin-bottom: 0.35rem;
+}
+.markdown-content strong,
+.aula-content strong {
   font-weight: 600;
 }
-.markdown-content p {
-  margin-bottom: 0.75rem;
+.markdown-content p,
+.aula-content p {
+  margin-bottom: 0.85rem;
+  line-height: 1.7;
 }
-.markdown-content p:last-child {
+.markdown-content p:last-child,
+.aula-content p:last-child {
   margin-bottom: 0;
+}
+.aula-content a {
+  color: #0284c7;
+  text-decoration: underline;
+}
+.dark .aula-content a {
+  color: #38bdf8;
 }
 
 /* Animação shimmer para efeito hero */
