@@ -84,19 +84,25 @@
   margin-bottom: 0.25rem;
 }
 .markdown-content ul,
-.aula-content ul {
+.aula-content ul,
+.editor-list-style ul {
   list-style-type: disc;
+  list-style-position: outside;
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
 .markdown-content ol,
-.aula-content ol {
+.aula-content ol,
+.editor-list-style ol {
   list-style-type: decimal;
+  list-style-position: outside;
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
 .markdown-content li,
-.aula-content li {
+.aula-content li,
+.editor-list-style li {
+  display: list-item;
   margin-bottom: 0.35rem;
 }
 .markdown-content strong,
@@ -148,4 +154,24 @@
 
 .animate-message-received {
   animation: message-received 0.5s ease-out 1 both;
+}
+
+/* Barra de progresso “Sabiá está pensando” */
+@keyframes thinking-progress {
+  0% {
+    width: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    width: 75%;
+    opacity: 1;
+  }
+  100% {
+    width: 0%;
+    opacity: 0.8;
+  }
+}
+
+.animate-thinking-progress {
+  animation: thinking-progress 1.5s ease-in-out infinite;
 }

@@ -16,7 +16,7 @@ const quickAccess = [
   },
   {
     href: "/dashboard/planejamento",
-    title: "Meus Planejamentos",
+    title: "Meus Planos de Aula",
     description: "Crie planos de aula detalhados com IA.",
     icon: "edit_calendar",
     iconBg: "bg-primary/20 text-primary-dark dark:text-primary group-hover:bg-primary group-hover:text-background-dark",
@@ -31,12 +31,13 @@ const quickAccess = [
     blob: "bg-yellow-50 dark:bg-yellow-900/10",
   },
   {
-    href: "/dashboard/historico",
+    href: null,
     title: "Histórico",
     description: "Acesse conversas e materiais anteriores.",
     icon: "history",
     iconBg: "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white",
     blob: "bg-purple-50 dark:bg-purple-900/10",
+    comingSoon: true,
   },
 ];
 
@@ -94,7 +95,12 @@ export default function DashboardPage() {
                 <span className="inline-block animate-pulse">👋</span>
               </h2>
               <p className="text-lg text-slate-600 dark:text-slate-400">
-                Como posso ajudar a transformar sua aula hoje?
+                <Link
+                  href="/chat"
+                  className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                >
+                  Como posso ajudar a transformar sua aula hoje?
+                </Link>
               </p>
             </div>
             <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
@@ -113,32 +119,55 @@ export default function DashboardPage() {
             Acesso Rápido
           </h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {quickAccess.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group relative overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-neutral-surface-dark cursor-pointer"
-              >
-                <div
-                  className={`absolute -right-4 -top-4 h-24 w-24 rounded-bl-full transition-transform group-hover:scale-110 ${item.blob}`}
-                />
-                <div className="relative z-10">
-                  <div
-                    className={`mb-4 flex h-12 w-12 items-center justify-center rounded-md transition-colors duration-300 ${item.iconBg}`}
-                  >
-                    <span className="material-icons-round text-2xl">
-                      {item.icon}
+            {quickAccess.map((item) => {
+              const isComingSoon = "comingSoon" in item && item.comingSoon;
+              const cardContent = (
+                <>
+                  {"comingSoon" in item && item.comingSoon && (
+                    <span className="absolute right-3 top-3 rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-600 dark:text-slate-300">
+                      algo em breve
                     </span>
+                  )}
+                  <div
+                    className={`absolute -right-4 -top-4 h-24 w-24 rounded-bl-full transition-transform ${!isComingSoon ? "group-hover:scale-110" : ""} ${item.blob}`}
+                  />
+                  <div className="relative z-10">
+                    <div
+                      className={`mb-4 flex h-12 w-12 items-center justify-center rounded-md transition-colors duration-300 ${item.iconBg}`}
+                    >
+                      <span className="material-icons-round text-2xl">
+                        {item.icon}
+                      </span>
+                    </div>
+                    <h4 className="mb-1 text-lg font-bold text-slate-900 dark:text-white">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {item.description}
+                    </p>
                   </div>
-                  <h4 className="mb-1 text-lg font-bold text-slate-900 dark:text-white">
-                    {item.title}
-                  </h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    {item.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
+                </>
+              );
+              if (isComingSoon || item.href == null) {
+                return (
+                  <div
+                    key={item.title}
+                    className="group relative overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-neutral-surface-dark opacity-90"
+                  >
+                    {cardContent}
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group relative overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-neutral-surface-dark cursor-pointer"
+                >
+                  {cardContent}
+                </Link>
+              );
+            })}
           </div>
         </section>
 

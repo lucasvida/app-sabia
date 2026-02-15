@@ -5,10 +5,10 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeSelector } from "@/components/theme/ThemeSelector";
 
-const navItems = [
+const navItems: { href: string; label: string; external?: boolean }[] = [
   { href: "/", label: "Início" },
   { href: "/sobre", label: "Sobre" },
-  { href: "/documentacao", label: "Documentação ↗" },
+  { href: "https://docs.sabiaedu.ia.br/", label: "Documentação ↗", external: true },
   { href: "/contato", label: "Contato" },
 ];
 
@@ -39,18 +39,32 @@ export function Header() {
 
         {/* Links centrais */}
         <div className="hidden md:flex items-center gap-1">
-          {navItems.map(({ href, label }) => {
+          {navItems.map(({ href, label, external }) => {
             const isActive =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
+              !external && (href === "/" ? pathname === "/" : pathname.startsWith(href));
+            const linkClass = `px-4 py-2.5 text-sm font-medium transition-colors rounded-md border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer ${
+              isActive
+                ? "text-primary border-primary"
+                : "border-transparent text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+            }`;
+            if (external) {
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  {label}
+                </a>
+              );
+            }
             return (
               <Link
                 key={href}
                 href={href}
-                className={`px-4 py-2.5 text-sm font-medium transition-colors rounded-md border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer ${
-                  isActive
-                    ? "text-primary border-primary"
-                    : "border-transparent text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
+                className={linkClass}
               >
                 {label}
               </Link>

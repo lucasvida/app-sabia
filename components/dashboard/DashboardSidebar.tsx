@@ -12,7 +12,7 @@ const PROFILE_IMAGE =
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/dashboard/aulas", label: "Minhas Aulas", icon: "class" },
-  { href: "/dashboard/planejamento", label: "Meus Planejamentos", icon: "edit_calendar" },
+  { href: "/dashboard/planejamento", label: "Meus Planos de Aula", icon: "edit_calendar" },
   { href: "/dashboard/quizzes", label: "Meus Quizzes", icon: "quiz" },
 ];
 

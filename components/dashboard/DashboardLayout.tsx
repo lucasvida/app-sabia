@@ -2,6 +2,7 @@
 
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardTopBar } from "./DashboardTopBar";
+import { ChatFab } from "./ChatFab";
 
 export function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export function DashboardLayout({
           {children}
         </div>
       </main>
+      <ChatFab />
     </div>
   );
 }

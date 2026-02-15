@@ -6,12 +6,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
-const navLinks = [
+const navLinks: { name: string; href: string; external?: boolean }[] = [
   { name: "Início", href: "/" },
   { name: "Sobre", href: "/sobre" },
-  { name: "Documentação ↗", href: "/documentacao" },
+  { name: "Documentação ↗", href: "https://docs.sabiaedu.ia.br/", external: true },
   { name: "Contato", href: "/contato" },
-
 ];
 
 export function HomeHeader() {
@@ -69,19 +68,35 @@ export function HomeHeader() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-sm font-bold transition-colors cursor-pointer ${
-                  pathname === link.href
-                    ? "text-primary"
-                    : currentTheme === "dark" ? "text-white" : "text-slate-600 hover:text-primary"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const linkClass = `text-sm font-bold transition-colors cursor-pointer ${
+                !link.external && pathname === link.href
+                  ? "text-primary"
+                  : currentTheme === "dark" ? "text-white" : "text-slate-600 hover:text-primary"
+              }`;
+              if (link.external) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={linkClass}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Actions */}
@@ -139,16 +154,29 @@ export function HomeHeader() {
       >
         <div className="absolute inset-0 bg-white p-8 pt-24">
           <div className="flex flex-col gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-2xl font-semibold text-slate-800 cursor-pointer"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-2xl font-semibold text-slate-800 cursor-pointer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-2xl font-semibold text-slate-800 cursor-pointer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )
+            )}
             <hr className="border-slate-100" />
             <Link
               href="/login"

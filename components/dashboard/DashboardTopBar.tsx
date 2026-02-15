@@ -42,6 +42,14 @@ export function DashboardTopBar() {
         </span>
       </div>
       <div className="ml-auto flex items-center gap-2 sm:gap-4">
+        <Link
+          href="/chat"
+          className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-bold text-slate-900 shadow-sm transition-colors hover:bg-primary-dark cursor-pointer"
+          aria-label="Abrir chat"
+        >
+          <span className="material-icons-round text-lg">chat_bubble_outline</span>
+          <span className="hidden sm:inline">Chat</span>
+        </Link>
         <button
           type="button"
           onClick={toggleTheme}

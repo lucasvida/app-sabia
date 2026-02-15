@@ -5,8 +5,19 @@ import Image from "next/image";
 
 const PENDING_PROMPT_KEY = "sabia_pending_prompt";
 
-const AI_AVATAR =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuA6I5yYNPqFc18oY-B50JVJfR7bkQq9B1eq9CPO9fur89_tc75h9oAYN1-p16SvjWt29uaBf43O3Y_-SEirc3WSqadDdczDBeEPWVAJg0874pPwDfS1Ex4pA3GHumIe-a0k8OC_ikmMGyMtdHFiLtcPXJijgOQsxBzsrBSa43sBhhT0aI2FJpRaJWiqq62kxak0_gE88znz3aVWyJur3_T-GCt4nwPs3TuFY417-fjY5I9jbpfEAILfC1K67shEAYAhiFV1bOivdS0";
+const THINKING_PHRASES = [
+  "Sabiá está organizando suas ideias…",
+  "Preparando um conteúdo caprichado para você.",
+  "Só um instante, estou estruturando a aula.",
+  "Ajustando os detalhes finais do material.",
+  "Pensando na melhor forma de apresentar isso.",
+  "Consultando a biblioteca do conhecimento…",
+  "Alinhando os tópicos com cuidado.",
+  "Organizando o plano passo a passo.",
+];
+
+const THINKING_DELAY_MS = 5000;
+const PHRASE_ROTATE_MS = 4500;
 
 const USER_AVATAR =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD_SIsSxs-0XPQBguo2ZTPCT-hIOT788173C1npTJ5dpbJhf5nxB3D6qxE6HBI5jI2yRchpSXB0ft4hgnD009tdJ7Qdjs504Rt8uABaD7eBKHkk_wdTudXbwEIe_5XsQNkjIRXjo8pZzQn_1qE-SsVyuPhq8moYtuZjYfG7rQe3f_NytoqfW-rO_9eLRfAWGSO0_wjdw9ex8OGRbzzo-RVE_8CdpsnaZ4dLwZ1YT4nJhLEX40tLNBYKxYdCFtU0h6hN9hEzaqfygU4";
@@ -22,8 +33,11 @@ export function ChatMain() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [thinkingPhrase, setThinkingPhrase] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initialLoadRef = useRef(false);
+  const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const phraseIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const scrollToBottom = () => {
     containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
@@ -32,6 +46,35 @@ export function ChatMain() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, loading]);
+
+  useEffect(() => {
+    if (!loading) {
+      setThinkingPhrase(null);
+      if (thinkingTimerRef.current) {
+        clearTimeout(thinkingTimerRef.current);
+        thinkingTimerRef.current = null;
+      }
+      if (phraseIntervalRef.current) {
+        clearInterval(phraseIntervalRef.current);
+        phraseIntervalRef.current = null;
+      }
+      return;
+    }
+    setThinkingPhrase(null);
+    thinkingTimerRef.current = setTimeout(() => {
+      thinkingTimerRef.current = null;
+      let index = 0;
+      setThinkingPhrase(THINKING_PHRASES[0]);
+      phraseIntervalRef.current = setInterval(() => {
+        index = (index + 1) % THINKING_PHRASES.length;
+        setThinkingPhrase(THINKING_PHRASES[index]);
+      }, PHRASE_ROTATE_MS);
+    }, THINKING_DELAY_MS);
+    return () => {
+      if (thinkingTimerRef.current) clearTimeout(thinkingTimerRef.current);
+      if (phraseIntervalRef.current) clearInterval(phraseIntervalRef.current);
+    };
+  }, [loading]);
 
   const sendMessage = async (text: string) => {
     const trimmed = text.trim();
@@ -163,17 +206,15 @@ export function ChatMain() {
             </div>
           ) : (
             <div key={i} className="mx-auto flex max-w-4xl gap-4">
-              <div className="shrink-0">
-                <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-primary to-green-600 shadow-md">
-                  <Image
-                    src={AI_AVATAR}
-                    alt="Avatar do assistente Sabiá"
-                    className="h-full w-full object-cover opacity-90 mix-blend-overlay"
-                    width={40}
-                    height={40}
-                    unoptimized
-                  />
-                </div>
+              <div className="shrink-0 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md">
+                <Image
+                  src="/favicon.png"
+                  alt="Sabiá"
+                  className="h-7 w-7 object-contain"
+                  width={28}
+                  height={28}
+                  unoptimized
+                />
               </div>
               <div className="flex-1 space-y-2">
                 <span className="font-bold text-gray-900 dark:text-white">Sabiá</span>
@@ -186,14 +227,33 @@ export function ChatMain() {
         )}
 
         {loading && (
-          <div className="mx-auto flex max-w-4xl gap-4">
+          <div className="mx-auto flex max-w-4xl gap-4 animate-in fade-in duration-300">
             <div className="shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-primary to-green-600 shadow-md">
-                <span className="material-icons-outlined text-lg text-white">smart_toy</span>
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md animate-pulse ring-2 ring-primary/30 ring-offset-2 dark:ring-offset-slate-950">
+                <Image
+                  src="/favicon.png"
+                  alt=""
+                  className="h-7 w-7 object-contain"
+                  width={28}
+                  height={28}
+                  unoptimized
+                />
               </div>
             </div>
-            <div className="flex-1 rounded-md rounded-tl-none border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-              <span className="text-gray-500 dark:text-gray-400">Sabiá está pensando...</span>
+            <div className="flex-1 overflow-hidden rounded-md rounded-tl-none border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex min-h-10 items-center gap-2">
+                <span className="text-gray-500 dark:text-gray-400 transition-opacity duration-300">
+                  {thinkingPhrase ?? "Sabiá está pensando..."}
+                </span>
+                <span className="flex gap-1" aria-hidden="true">
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:0ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:150ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:300ms]" />
+                </span>
+              </div>
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                <div className="h-full w-0 rounded-full bg-primary/60 animate-thinking-progress" />
+              </div>
             </div>
           </div>
         )}
@@ -228,6 +288,13 @@ export function ChatMain() {
               style={{ minHeight: "48px" }}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  const form = e.currentTarget.form;
+                  if (form && message.trim()) form.requestSubmit();
+                }
+              }}
               disabled={loading}
             />
             <button

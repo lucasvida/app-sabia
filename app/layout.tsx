@@ -10,7 +10,7 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Sabiá - Login para Professores",
+  title: "Sabiá - Assistente Pedagógico Inteligente",
   description:
     "Assistente Pedagógico Inteligente. Planeje aulas, corrija atividades e inspire seus alunos.",
   icons: {
