@@ -11,7 +11,17 @@ const PENDING_PROMPT_KEY = "sabia_pending_prompt";
 const USER_AVATAR =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD_SIsSxs-0XPQBguo2ZTPCT-hIOT788173C1npTJ5dpbJhf5nxB3D6qxE6HBI5jI2yRchpSXB0ft4hgnD009tdJ7Qdjs504Rt8uABaD7eBKHkk_wdTudXbwEIe_5XsQNkjIRXjo8pZzQn_1qE-SsVyuPhq8moYtuZjYfG7rQe3f_NytoqfW-rO_9eLRfAWGSO0_wjdw9ex8OGRbzzo-RVE_8CdpsnaZ4dLwZ1YT4nJhLEX40tLNBYKxYdCFtU0h6hN9hEzaqfygU4";
 
-export function ChatMain() {
+const QUICK_ACTIONS = [
+  { label: "Salvar Aula", prompt: "Salvar Aula", icon: "class" },
+  { label: "Salvar Plano", prompt: "Salvar Plano de Aula", icon: "edit_calendar" },
+  { label: "Salvar Quiz", prompt: "Salvar Quiz", icon: "quiz" },
+];
+
+type ChatMainProps = {
+  onMenuClick?: () => void;
+};
+
+export function ChatMain({ onMenuClick }: ChatMainProps) {
   const { messages, loading, error, thinkingPhrase, sendMessage } = useChat();
   const { setTheme, resolvedTheme } = useTheme();
   const currentTheme = resolvedTheme || "light";
@@ -56,22 +66,33 @@ export function ChatMain() {
   return (
     <main className="relative flex flex-1 flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Top Bar */}
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80 md:px-6">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="shrink-0 rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden cursor-pointer"
+              aria-label="Abrir menu"
+            >
+              <span className="material-icons-outlined">menu</span>
+            </button>
+          )}
+          <span className="hidden text-sm font-medium text-gray-500 dark:text-gray-400 md:inline">
             Conversa atual:
           </span>
-          <span className="max-w-[280px] truncate text-sm font-bold text-gray-900 dark:text-white">
+          <span className="truncate text-sm font-bold text-gray-900 dark:text-white md:max-w-[280px]">
             {conversationTitle}
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 md:gap-4">
           <Link
             href="/dashboard"
             className="text-sm font-medium text-primary hover:underline cursor-pointer"
             aria-label="Voltar ao dashboard"
           >
-            Voltar
+            <span className="hidden md:inline">Voltar</span>
+            <span className="material-icons-outlined md:hidden">home</span>
           </Link>
           <button
             type="button"
@@ -94,7 +115,7 @@ export function ChatMain() {
       <div
         ref={containerRef}
         id="chat-container"
-        className="flex-1 space-y-8 overflow-y-auto p-6 scroll-smooth md:p-10"
+        className="flex-1 space-y-6 overflow-y-auto p-4 scroll-smooth md:space-y-8 md:p-10"
       >
         <div className="flex justify-center pb-8">
           <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500 dark:bg-white/5 dark:text-gray-400">
@@ -113,38 +134,38 @@ export function ChatMain() {
 
         {messages.map((msg, i) =>
           msg.role === "user" ? (
-            <div key={i} className="group mx-auto flex max-w-4xl flex-row-reverse gap-4">
+            <div key={i} className="group mx-auto flex max-w-4xl flex-row-reverse gap-2 md:gap-4">
               <div className="shrink-0">
                 <Image
                   src={USER_AVATAR}
                   alt="Avatar do usuário"
-                  className="h-10 w-10 rounded-full object-cover shadow-sm"
+                  className="h-8 w-8 rounded-full object-cover shadow-sm md:h-10 md:w-10"
                   width={40}
                   height={40}
                   unoptimized
                 />
               </div>
               <div className="flex-1 space-y-2 text-right">
-                <div className="inline-block max-w-[85%] rounded-md rounded-tr-none bg-primary/20 p-4 text-left text-gray-900 dark:text-white">
+                <div className="inline-block max-w-[85%] rounded-md rounded-tr-none bg-primary/20 p-3 text-left text-sm text-gray-900 dark:text-white md:p-4 md:text-base">
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                 </div>
               </div>
             </div>
           ) : (
-            <div key={i} className="mx-auto flex max-w-4xl gap-4">
-              <div className="shrink-0 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md">
+            <div key={i} className="mx-auto flex max-w-4xl gap-2 md:gap-4">
+              <div className="shrink-0 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md md:h-10 md:w-10">
                 <Image
                   src="/favicon.png"
                   alt="Sabiá"
-                  className="h-7 w-7 object-contain"
+                  className="h-6 w-6 object-contain md:h-7 md:w-7"
                   width={28}
                   height={28}
                   unoptimized
                 />
               </div>
-              <div className="flex-1 space-y-2">
-                <span className="font-bold text-gray-900 dark:text-white">Sabiá</span>
-                <div className="markdown-content prose prose-sm max-w-none rounded-md rounded-tl-none border border-slate-200 bg-white p-6 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+              <div className="flex-1 space-y-1 md:space-y-2">
+                <span className="text-xs font-bold text-gray-900 dark:text-white md:text-sm">Sabiá</span>
+                <div className="markdown-content prose prose-sm max-w-none rounded-md rounded-tl-none border border-slate-200 bg-white p-3 text-sm text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 md:p-6 md:text-base">
                   <div className="whitespace-pre-wrap">{msg.content}</div>
                 </div>
               </div>
@@ -194,15 +215,29 @@ export function ChatMain() {
       </div>
 
       {/* Input */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-6 dark:from-slate-950 dark:via-slate-950">
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-4 dark:from-slate-950 dark:via-slate-950 md:p-6">
         <div className="pointer-events-auto mx-auto max-w-4xl">
+          {/* Botões de ações rápidas no mobile */}
+          <div className="mb-2 flex gap-2 overflow-x-auto pb-2 md:hidden">
+            {QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.prompt}
+                type="button"
+                onClick={() => sendMessage(action.prompt)}
+                className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+              >
+                <span className="material-icons-outlined text-sm">{action.icon}</span>
+                <span>{action.label}</span>
+              </button>
+            ))}
+          </div>
           <form
             onSubmit={handleSubmit}
             className="relative flex items-end gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-xl transition-shadow focus-within:ring-2 focus-within:ring-primary/50 dark:border-slate-800 dark:bg-slate-900"
           >
             <textarea
-              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-4 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500"
-              placeholder="Digite sua mensagem ou peça uma atividade..."
+              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-3 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500 md:px-4"
+              placeholder="Digite sua mensagem..."
               rows={1}
               style={{ minHeight: "48px" }}
               value={message}

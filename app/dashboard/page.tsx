@@ -183,14 +183,14 @@ export default function DashboardPage() {
   return (
     <>
         {/* Welcome */}
-        <section className="mx-auto mt-4 max-w-5xl mb-10">
-          <div className="mb-2 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+        <section className="mx-auto max-w-5xl mb-6 md:mb-10">
+          <div className="mb-2 flex flex-col items-start justify-between gap-2 md:flex-row md:items-end md:gap-4">
             <div>
-              <h2 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">
+              <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white md:mb-2 md:text-3xl lg:text-4xl">
                 Olá, {userName}!{" "}
                 <span className="inline-block animate-pulse">👋</span>
               </h2>
-              <p className="text-lg text-slate-600 dark:text-slate-400">
+              <p className="text-base text-slate-600 dark:text-slate-400 md:text-lg">
                 <Link
                   href="/chat"
                   className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded cursor-pointer"
@@ -206,8 +206,8 @@ export default function DashboardPage() {
         <DashboardChatCTA />
 
         {/* Acesso Rápido */}
-        <section className="mx-auto max-w-5xl">
-          <h3 className="mb-6 flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-white">
+        <section className="mx-auto max-w-5xl mt-6 md:mt-8">
+          <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-slate-900 dark:text-white md:mb-6 md:text-lg">
             <span className="material-icons-round text-primary">grid_view</span>
             Acesso Rápido
           </h3>
@@ -265,9 +265,9 @@ export default function DashboardPage() {
         </section>
 
         {/* Recentes */}
-        <section className="mx-auto mt-12 max-w-5xl">
-          <div className="mb-6 flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-white">
+        <section className="mx-auto mt-8 max-w-5xl md:mt-12">
+          <div className="mb-4 flex items-center justify-between md:mb-6">
+            <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900 dark:text-white md:text-lg">
               <span className="material-icons-round text-slate-400">schedule</span>
               Recentes
             </h3>

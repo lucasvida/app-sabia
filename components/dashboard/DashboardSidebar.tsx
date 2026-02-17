@@ -24,7 +24,12 @@ function getFirstName(fullName: string | undefined, email: string | undefined): 
   return "Professor(a)";
 }
 
-export function DashboardSidebar() {
+type DashboardSidebarProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+};
+
+export function DashboardSidebar({ isOpen = true, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [displayName, setDisplayName] = useState("Prof. …");
@@ -57,10 +62,29 @@ export function DashboardSidebar() {
   }
 
   return (
-    <aside className="flex h-auto w-full shrink-0 flex-col justify-between border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 md:h-screen md:w-64 md:sticky md:top-0 z-20">
+    <aside
+      className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col justify-between border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 transition-transform duration-300 md:relative md:z-20 md:translate-x-0 ${
+        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      }`}
+    >
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 z-50 rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden cursor-pointer"
+          aria-label="Fechar menu"
+        >
+          <span className="material-icons-outlined">close</span>
+        </button>
+      )}
       <div>
-        <Link href="/dashboard" className="flex items-center justify-center gap-3 p-6 cursor-pointer hover:opacity-80 transition-opacity" aria-label="Sabiá - Voltar ao dashboard">
-          <div className="relative h-16 w-auto">
+        <Link
+          href="/dashboard"
+          onClick={onClose}
+          className="flex items-center justify-center gap-2 p-3 md:p-4 cursor-pointer hover:opacity-80 transition-opacity"
+          aria-label="Sabiá - Voltar ao dashboard"
+        >
+          <div className="relative h-10 w-auto md:h-14">
             <Image
               src="/logo-sabia.png"
               alt="Logo do Sabiá - assistente pedagógico inteligente"
@@ -72,7 +96,7 @@ export function DashboardSidebar() {
             />
           </div>
         </Link>
-        <nav className="space-y-1 px-4 py-2">
+        <nav className="space-y-0.5 px-2 py-1 md:px-4 md:py-2">
           {navItems.map(({ href, label, icon }) => {
             const isActive =
               href === "/dashboard"
@@ -82,48 +106,50 @@ export function DashboardSidebar() {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors cursor-pointer ${
+                onClick={onClose}
+                className={`flex items-center gap-2 rounded-md px-2 py-2 md:px-4 md:py-2.5 transition-colors cursor-pointer text-sm ${
                   isActive
                     ? "bg-primary/10 font-semibold text-primary-dark dark:text-primary"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span className="material-icons-round">{icon}</span>
-                {label}
+                <span className="material-icons-round text-lg md:text-xl">{icon}</span>
+                <span className="truncate">{label}</span>
               </Link>
             );
           })}
         </nav>
       </div>
-      <div className="border-t border-slate-100 dark:border-slate-800 p-4 space-y-1">
+      <div className="border-t border-slate-100 dark:border-slate-800 p-2 md:p-4 space-y-0.5">
         <Link
           href="/dashboard/configuracoes"
-          className="flex items-center gap-3 rounded-md px-4 py-3 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+          onClick={onClose}
+          className="flex items-center gap-2 rounded-md px-2 py-2 md:px-4 md:py-2.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
           aria-label={`Configurações da conta - ${displayName}`}
         >
-          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700">
-            <span className="material-icons-outlined text-lg text-slate-500 dark:text-slate-400" aria-hidden="true">
+          <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 md:h-8 md:w-8">
+            <span className="material-icons-outlined text-base text-slate-500 dark:text-slate-400 md:text-lg" aria-hidden="true">
               person
             </span>
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-neutral-surface-dark bg-primary" />
+            <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-white dark:border-neutral-surface-dark bg-primary md:h-2.5 md:w-2.5" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-slate-900 dark:text-white">
+            <p className="truncate text-xs font-medium text-slate-900 dark:text-white md:text-sm">
               {displayName}
             </p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-500">
+            <p className="truncate text-[10px] text-slate-500 dark:text-slate-500 md:text-xs">
               Configurações
             </p>
           </div>
-          <span className="material-icons-round text-slate-400">settings</span>
+          <span className="material-icons-round text-slate-400 text-lg md:text-xl">settings</span>
         </Link>
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-md px-4 py-3 text-left text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+          className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer md:px-4 md:py-2.5"
         >
-          <span className="material-icons-round">logout</span>
-          <span className="text-sm font-medium">Sair</span>
+          <span className="material-icons-round text-lg md:text-xl">logout</span>
+          <span className="text-xs font-medium md:text-sm">Sair</span>
         </button>
       </div>
     </aside>

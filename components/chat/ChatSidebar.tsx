@@ -12,7 +12,12 @@ const QUICK_ACTIONS = [
   { label: "Salvar Quiz", prompt: "Salvar Quiz", icon: "quiz" },
 ];
 
-export function ChatSidebar() {
+type ChatSidebarProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+};
+
+export function ChatSidebar({ isOpen = true, onClose }: ChatSidebarProps) {
   const { clearConversation, sendMessage } = useChat();
   const [userName, setUserName] = useState<string>("Professor(a)");
 
@@ -43,7 +48,21 @@ export function ChatSidebar() {
   };
 
   return (
-    <aside className="relative z-20 flex w-80 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 transition-colors duration-300">
+    <aside
+      className={`fixed inset-y-0 left-0 z-40 flex w-80 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 transition-transform duration-300 md:relative md:z-20 ${
+        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      }`}
+    >
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 z-50 rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden cursor-pointer"
+          aria-label="Fechar menu"
+        >
+          <span className="material-icons-outlined">close</span>
+        </button>
+      )}
       {/* Header com logo (mesma da home) */}
       <div className="border-b border-gray-100 p-5 dark:border-white/5">
         <div className="mb-6 flex justify-center">
