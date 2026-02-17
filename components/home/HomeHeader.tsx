@@ -10,7 +10,6 @@ const navLinks: { name: string; href: string; external?: boolean }[] = [
   { name: "Início", href: "/" },
   { name: "Sobre", href: "/sobre" },
   { name: "Documentação ↗", href: "https://docs.sabiaedu.ia.br/", external: true },
-  { name: "Contato", href: "/contato" },
 ];
 
 export function HomeHeader() {
@@ -115,20 +114,10 @@ export function HomeHeader() {
             </button>
             <Link
               href="/login"
-              className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-md transition-colors cursor-pointer ${
-                currentTheme === "dark" 
-                  ? "text-white hover:bg-slate-800" 
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
+              className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-slate-900 px-6 py-2.5 rounded-md font-bold shadow-lg shadow-primary/25 active:scale-95 transition-all cursor-pointer"
             >
               <span className="material-icons-outlined text-lg">login</span>
-              Entrar
-            </Link>
-            <Link
-              href="/login"
-              className="bg-primary hover:bg-primary-dark text-slate-900 px-6 py-2.5 rounded-md font-bold shadow-lg shadow-primary/25 active:scale-95 transition-all cursor-pointer"
-            >
-              Começar Agora
+              Fazer Login
             </Link>
           </div>
 
@@ -180,17 +169,10 @@ export function HomeHeader() {
             <hr className="border-slate-100" />
             <Link
               href="/login"
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-md border-2 border-slate-100 font-bold text-slate-700 cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-slate-900 rounded-md font-bold shadow-lg shadow-primary/30 cursor-pointer"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="material-icons-outlined">login</span> Entrar no Sabiá
-            </Link>
-            <Link
-              href="/login"
-              className="w-full py-4 bg-primary text-slate-900 rounded-md font-bold shadow-lg shadow-primary/30 text-center cursor-pointer"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Teste Grátis Agora
+              <span className="material-icons-outlined">login</span> Fazer Login
             </Link>
           </div>
         </div>

@@ -76,7 +76,16 @@ export async function PATCH(
       .single();
 
     if (existing?.aula) {
-      Object.assign(aulaJson, typeof existing.aula === "string" ? JSON.parse(existing.aula) : existing.aula);
+      const raw = existing.aula;
+      if (typeof raw === "string") {
+        try {
+          Object.assign(aulaJson, JSON.parse(raw));
+        } catch {
+          // Valor no banco não é JSON válido; começa do zero com titulo/conteudo
+        }
+      } else if (raw && typeof raw === "object") {
+        Object.assign(aulaJson, raw);
+      }
     }
     if (titulo !== undefined) aulaJson.titulo = titulo;
     if (conteudo !== undefined) aulaJson.conteudo = conteudo;

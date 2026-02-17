@@ -66,7 +66,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { titulo, conteudo } = body;
+    const { titulo, conteudo, perguntas } = body;
 
     const quizJson: Record<string, unknown> = {};
     const { data: existing } = await supabase
@@ -78,10 +78,19 @@ export async function PATCH(
 
     if (existing?.[COL_JSON as keyof typeof existing]) {
       const raw = existing[COL_JSON as keyof typeof existing];
-      Object.assign(quizJson, typeof raw === "string" ? JSON.parse(raw) : raw);
+      if (typeof raw === "string") {
+        try {
+          Object.assign(quizJson, JSON.parse(raw));
+        } catch {
+          // Valor no banco não é JSON válido; começa do zero
+        }
+      } else if (raw && typeof raw === "object") {
+        Object.assign(quizJson, raw);
+      }
     }
     if (titulo !== undefined) quizJson.titulo = titulo;
     if (conteudo !== undefined) quizJson.conteudo = conteudo;
+    if (perguntas !== undefined) quizJson.perguntas = perguntas;
 
     const { error } = await supabase
       .from("quizzes")

@@ -2,42 +2,24 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useChat } from "./ChatContext";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 const PENDING_PROMPT_KEY = "sabia_pending_prompt";
-
-const THINKING_PHRASES = [
-  "Sabiá está organizando suas ideias…",
-  "Preparando um conteúdo caprichado para você.",
-  "Só um instante, estou estruturando a aula.",
-  "Ajustando os detalhes finais do material.",
-  "Pensando na melhor forma de apresentar isso.",
-  "Consultando a biblioteca do conhecimento…",
-  "Alinhando os tópicos com cuidado.",
-  "Organizando o plano passo a passo.",
-];
-
-const THINKING_DELAY_MS = 5000;
-const PHRASE_ROTATE_MS = 4500;
 
 const USER_AVATAR =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD_SIsSxs-0XPQBguo2ZTPCT-hIOT788173C1npTJ5dpbJhf5nxB3D6qxE6HBI5jI2yRchpSXB0ft4hgnD009tdJ7Qdjs504Rt8uABaD7eBKHkk_wdTudXbwEIe_5XsQNkjIRXjo8pZzQn_1qE-SsVyuPhq8moYtuZjYfG7rQe3f_NytoqfW-rO_9eLRfAWGSO0_wjdw9ex8OGRbzzo-RVE_8CdpsnaZ4dLwZ1YT4nJhLEX40tLNBYKxYdCFtU0h6hN9hEzaqfygU4";
 
-type Message = { role: "user" | "assistant"; content: string };
-
-function getResponseText(data: { response?: string }): string {
-  return typeof data?.response === "string" ? data.response : "Não foi possível obter resposta.";
-}
-
 export function ChatMain() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, loading, error, thinkingPhrase, sendMessage } = useChat();
+  const { setTheme, resolvedTheme } = useTheme();
+  const currentTheme = resolvedTheme || "light";
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [thinkingPhrase, setThinkingPhrase] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initialLoadRef = useRef(false);
-  const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const phraseIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const toggleTheme = () => setTheme(currentTheme === "dark" ? "light" : "dark");
 
   const scrollToBottom = () => {
     containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
@@ -48,69 +30,6 @@ export function ChatMain() {
   }, [messages, loading]);
 
   useEffect(() => {
-    if (!loading) {
-      setThinkingPhrase(null);
-      if (thinkingTimerRef.current) {
-        clearTimeout(thinkingTimerRef.current);
-        thinkingTimerRef.current = null;
-      }
-      if (phraseIntervalRef.current) {
-        clearInterval(phraseIntervalRef.current);
-        phraseIntervalRef.current = null;
-      }
-      return;
-    }
-    setThinkingPhrase(null);
-    thinkingTimerRef.current = setTimeout(() => {
-      thinkingTimerRef.current = null;
-      let index = 0;
-      setThinkingPhrase(THINKING_PHRASES[0]);
-      phraseIntervalRef.current = setInterval(() => {
-        index = (index + 1) % THINKING_PHRASES.length;
-        setThinkingPhrase(THINKING_PHRASES[index]);
-      }, PHRASE_ROTATE_MS);
-    }, THINKING_DELAY_MS);
-    return () => {
-      if (thinkingTimerRef.current) clearTimeout(thinkingTimerRef.current);
-      if (phraseIntervalRef.current) clearInterval(phraseIntervalRef.current);
-    };
-  }, [loading]);
-
-  const sendMessage = async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
-
-    setError(null);
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        const errMsg = typeof data?.error === "string" ? data.error : "Erro ao conversar. Tente novamente.";
-        setError(errMsg);
-        setMessages((prev) => prev.slice(0, -1));
-        return;
-      }
-
-      const responseText = getResponseText(data);
-      setMessages((prev) => [...prev, { role: "assistant", content: responseText }]);
-    } catch {
-      setError("Erro de conexão. Tente novamente.");
-      setMessages((prev) => prev.slice(0, -1));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     if (initialLoadRef.current) return;
     initialLoadRef.current = true;
 
@@ -119,7 +38,7 @@ export function ChatMain() {
       window.sessionStorage.removeItem(PENDING_PROMPT_KEY);
       sendMessage(pending);
     }
-  }, []);
+  }, [sendMessage]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,20 +65,27 @@ export function ChatMain() {
             {conversationTitle}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-primary hover:underline cursor-pointer"
+            aria-label="Voltar ao dashboard"
+          >
+            Voltar
+          </Link>
           <button
             type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
-            aria-label="Exportar"
+            onClick={toggleTheme}
+            className={`p-2 rounded-full transition-colors cursor-pointer ${
+              currentTheme === "dark"
+                ? "text-white hover:bg-slate-800"
+                : "text-slate-500 hover:bg-slate-100"
+            }`}
+            aria-label={currentTheme === "dark" ? "Modo claro" : "Modo escuro"}
           >
-            <span className="material-icons-outlined">ios_share</span>
-          </button>
-          <button
-            type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500 dark:hover:bg-white/5 cursor-pointer"
-            aria-label="Limpar chat"
-          >
-            <span className="material-icons-outlined">delete_outline</span>
+            <span className="material-icons-outlined">
+              {currentTheme === "dark" ? "light_mode" : "dark_mode"}
+            </span>
           </button>
         </div>
       </header>
@@ -274,15 +200,8 @@ export function ChatMain() {
             onSubmit={handleSubmit}
             className="relative flex items-end gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-xl transition-shadow focus-within:ring-2 focus-within:ring-primary/50 dark:border-slate-800 dark:bg-slate-900"
           >
-            <button
-              type="button"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
-              aria-label="Anexar"
-            >
-              <span className="material-icons-outlined">attach_file</span>
-            </button>
             <textarea
-              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-2 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500"
+              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-4 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500"
               placeholder="Digite sua mensagem ou peça uma atividade..."
               rows={1}
               style={{ minHeight: "48px" }}
@@ -303,8 +222,8 @@ export function ChatMain() {
               className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary text-black shadow-lg shadow-primary/20 transition-transform hover:bg-primary-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               aria-label="Enviar"
             >
-              <span className="material-icons-outlined transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                send
+              <span className="material-icons-outlined transition-transform group-hover:translate-y-0.5">
+                arrow_upward
               </span>
             </button>
           </form>

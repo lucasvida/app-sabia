@@ -24,7 +24,7 @@ O **Sabiá** é um assistente inteligente brasileiro voltado para quem educa. O 
 - **Turmas** – Gestão de turmas, alunos e materiais.
 - **Histórico** – Acesso a conversas e materiais anteriores.
 - **Tema claro/escuro** – Suporte a modo escuro com persistência no `localStorage`.
-- **Páginas institucionais** – Home, Sobre e Contato.
+- **Páginas institucionais** – Home e Sobre.
 
 ### Tecnologias
 
@@ -139,7 +139,7 @@ app-sabia/
 
 ## Autenticação e rotas protegidas
 
-- **Públicas:** `/`, `/login`, `/sobre`, `/contato`, `/aulas`, `/chat` (acesso ao chat pode ser restrito conforme sua regra).
+- **Públicas:** `/`, `/login`, `/sobre`, `/aulas`, `/chat` (acesso ao chat pode ser restrito conforme sua regra).
 - **Protegidas:** todas as rotas em `/dashboard/*`. Sem sessão Supabase válida, o usuário é redirecionado para `/`.
 - O middleware usa `@supabase/ssr` para ler/atualizar a sessão via cookies em toda requisição.
 
@@ -183,4 +183,4 @@ Projeto privado. Uso conforme definido pelos mantenedores.
 
 ## Contato
 
-Para dúvidas ou sugestões sobre o Sabiá, utilize a página de [Contato](/contato) no próprio app ou abra uma issue no repositório.
+Para dúvidas ou sugestões sobre o Sabiá, abra uma issue no repositório.

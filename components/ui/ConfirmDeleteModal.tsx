@@ -58,7 +58,7 @@ export function ConfirmDeleteModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            className="flex-1 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             {cancelLabel}
           </button>
@@ -66,7 +66,7 @@ export function ConfirmDeleteModal({
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 rounded-lg border border-red-300 bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-60 dark:border-red-700 dark:bg-red-700 dark:hover:bg-red-800"
+            className="flex-1 cursor-pointer rounded-lg border border-red-300 bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-700 dark:bg-red-700 dark:hover:bg-red-800"
           >
             {loading ? "Excluindo…" : confirmLabel}
           </button>

@@ -66,20 +66,6 @@ export function DashboardTopBar() {
         </button>
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-primary dark:hover:bg-neutral-surface-dark dark:hover:text-primary cursor-pointer"
-          aria-label="Notificações"
-        >
-          <span className="material-icons-round">notifications</span>
-        </button>
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-primary dark:hover:bg-neutral-surface-dark dark:hover:text-primary cursor-pointer"
-          aria-label="Ajuda"
-        >
-          <span className="material-icons-round">help_outline</span>
-        </button>
-        <button
-          type="button"
           onClick={handleLogout}
           className="flex items-center gap-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-neutral-surface-dark px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
           aria-label="Sair"

@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Aula = {
@@ -23,20 +24,7 @@ function parseAulaField(aula: Aula): Record<string, any> {
   return (typeof raw === "object" ? raw : {}) as Record<string, any>;
 }
 
-function formatDate(s: string | undefined): string {
-  if (!s) return "";
-  try {
-    return new Date(s).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return "";
-  }
-}
-
-export default function AulaPublicaPage() {
+export default function VerAulaPage() {
   const params = useParams();
   const id = params?.id as string | undefined;
   const [aula, setAula] = useState<Aula | null>(null);
@@ -52,7 +40,7 @@ export default function AulaPublicaPage() {
 
     async function load() {
       try {
-        const res = await fetch(`/api/aulas/${encodeURIComponent(id!)}`);
+        const res = await fetch(`/api/dashboard/aulas/${encodeURIComponent(id!)}`);
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           setError(data?.error ?? "Aula não encontrada.");
@@ -75,7 +63,7 @@ export default function AulaPublicaPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
+      <div className="p-6 md:p-10">
         <p className="text-slate-500 dark:text-slate-400">Carregando aula…</p>
       </div>
     );
@@ -83,51 +71,61 @@ export default function AulaPublicaPage() {
 
   if (error || !aula) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
+      <div className="p-6 md:p-10">
         <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
           <p className="font-medium text-red-800 dark:text-red-200">
             {error ?? "Aula não encontrada."}
           </p>
+          <Link
+            href="/dashboard/aulas"
+            className="mt-4 inline-block text-sm font-medium text-primary hover:underline cursor-pointer"
+          >
+            ← Voltar para Minhas Aulas
+          </Link>
         </div>
       </div>
     );
   }
 
   const json = parseAulaField(aula);
-  const titulo = json.titulo ?? json.title ?? "";
-  const { titulo: _t, title: _t2, ...resto } = json;
-  const conteudo = json.conteudo ?? json.content ?? json.html ?? json.body ?? "";
-  const nomeProfessor = aula.nome_professor ?? "";
-  const dataExibicao = formatDate((aula.data_aula as string) ?? (aula.created_at as string));
+  const titulo = (json.titulo ?? json.title ?? "") as string;
+  const conteudo = (json.conteudo ?? json.content ?? json.html ?? json.body ?? "") as string;
+  const { titulo: _t, title: _t2, conteudo: _c, content: _c2, html: _h, body: _b, ...resto } = json;
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-8 md:py-12">
-      {titulo && (
-        <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white md:text-4xl">
-          {titulo}
-        </h1>
-      )}
+    <div className="p-6 md:p-10 max-w-4xl">
+      <Link
+        href="/dashboard/aulas"
+        className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white mb-6 inline-block cursor-pointer"
+      >
+        ← Voltar para Minhas Aulas
+      </Link>
 
-      <p className="mb-8 text-sm text-slate-500 dark:text-slate-400">
-        Criado por <span className="font-semibold text-slate-700 dark:text-slate-300">Sabiá</span>
-        {nomeProfessor && (
-          <>, revisado por <span className="font-semibold text-slate-700 dark:text-slate-300">Prof. {nomeProfessor}</span></>
-        )}
-        {dataExibicao && (
-          <> · <span>{dataExibicao}</span></>
-        )}
-      </p>
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+          {titulo || "Aula"}
+        </h1>
+        <Link
+          href={`/dashboard/aulas/${aula.id}/editar`}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        >
+          <span className="material-icons-outlined text-lg">edit</span>
+          Editar
+        </Link>
+      </div>
 
       {typeof conteudo === "string" && conteudo.trim() ? (
-        <div
-          className="aula-content text-slate-700 dark:text-slate-300"
+        <article
+          className="aula-content rounded-lg border border-slate-200 bg-white p-6 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
           dangerouslySetInnerHTML={{ __html: conteudo }}
         />
       ) : Object.keys(resto).length > 0 ? (
         <pre className="whitespace-pre-wrap rounded-lg border border-slate-200 bg-slate-50 p-6 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
           {JSON.stringify(resto, null, 2)}
         </pre>
-      ) : null}
-    </article>
+      ) : (
+        <p className="text-slate-500 dark:text-slate-400">Nenhum conteúdo ainda.</p>
+      )}
+    </div>
   );
 }

@@ -5,6 +5,51 @@ import Link from "next/link";
 import { DashboardChatCTA } from "@/components/dashboard/DashboardChatCTA";
 import { createClient } from "@/lib/supabase/client";
 
+function getTituloAula(aula: { aula?: unknown }): string {
+  if (!aula?.aula) return "Aula sem título";
+  try {
+    const j = typeof aula.aula === "string" ? JSON.parse(aula.aula) : aula.aula;
+    return (j?.titulo as string) ?? "Aula sem título";
+  } catch {
+    return "Aula sem título";
+  }
+}
+function getTituloPlano(plano: { planos_de_aulas?: unknown }): string {
+  if (!plano?.planos_de_aulas) return "Plano sem título";
+  try {
+    const j = typeof plano.planos_de_aulas === "string" ? JSON.parse(plano.planos_de_aulas) : plano.planos_de_aulas;
+    return (j?.titulo as string) ?? "Plano sem título";
+  } catch {
+    return "Plano sem título";
+  }
+}
+function getTituloQuiz(quiz: { quizzes?: unknown }): string {
+  if (!quiz?.quizzes) return "Quiz sem título";
+  try {
+    const j = typeof quiz.quizzes === "string" ? JSON.parse(quiz.quizzes) : quiz.quizzes;
+    return (j?.titulo as string) ?? "Quiz sem título";
+  } catch {
+    return "Quiz sem título";
+  }
+}
+function formatRecenteDate(s: string | undefined): string {
+  if (!s) return "—";
+  try {
+    const d = new Date(s);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (diffHours < 1) return "Agora";
+    if (diffHours < 24) return `Há ${diffHours} hora${diffHours > 1 ? "s" : ""}`;
+    if (diffDays === 1) return "Ontem";
+    if (diffDays < 7) return `Há ${diffDays} dias`;
+    return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+  } catch {
+    return "—";
+  }
+}
+
 const quickAccess = [
   {
     href: "/dashboard/aulas",
@@ -41,47 +86,98 @@ const quickAccess = [
   },
 ];
 
-const recentItems = [
-  {
-    title: "Plano de Aula: Revolução Industrial",
-    subtitle: "Gerado há 2 horas • História • 8º Ano",
-    icon: "description",
-    iconBg: "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400",
-  },
-  {
-    title: "Quiz: Frações e Decimais",
-    subtitle: "Gerado ontem • Matemática • 5º Ano",
-    icon: "task_alt",
-    iconBg: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400",
-  },
-  {
-    title: "Ideias para Feira de Ciências",
-    subtitle: "Chat finalizado • Ciências • Geral",
-    icon: "chat_bubble_outline",
-    iconBg: "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400",
-  },
-];
+type RecentItem = {
+  id: string | number;
+  title: string;
+  subtitle: string;
+  icon: string;
+  iconBg: string;
+  href: string;
+};
 
 export default function DashboardPage() {
   const [userName, setUserName] = useState<string>("Professor(a)");
+  const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+  const [recentLoading, setRecentLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
       const supabase = createClient();
       if (!supabase) return;
-      
+
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // Tenta pegar o nome do user_metadata ou email
-        const name = user.user_metadata?.full_name || 
-                     user.user_metadata?.name || 
-                     user.user_metadata?.display_name ||
-                     user.email?.split("@")[0] || 
-                     "Professor(a)";
+        const name = user.user_metadata?.full_name ||
+          user.user_metadata?.name ||
+          user.user_metadata?.display_name ||
+          user.email?.split("@")[0] ||
+          "Professor(a)";
         setUserName(name);
       }
     }
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    async function fetchRecentes() {
+      const supabase = createClient();
+      if (!supabase) {
+        setRecentLoading(false);
+        return;
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.id) {
+        setRecentItems([]);
+        setRecentLoading(false);
+        return;
+      }
+      const items: RecentItem[] = [];
+      try {
+        const [aulasRes, planosRes, quizzesRes] = await Promise.all([
+          supabase.from("aulas").select("id, aula, created_at").eq("id_professor", user.id).order("created_at", { ascending: false }).limit(1),
+          supabase.from("planos_de_aulas").select("id, planos_de_aulas, created_at").eq("id_professor", user.id).order("created_at", { ascending: false }).limit(1),
+          supabase.from("quizzes").select("id, quizzes, created_at").eq("id_professor", user.id).order("created_at", { ascending: false }).limit(1),
+        ]);
+        const lastAula = aulasRes.data?.[0] as { id: number; aula?: unknown; created_at?: string } | undefined;
+        const lastPlano = planosRes.data?.[0] as { id: number; planos_de_aulas?: unknown; created_at?: string } | undefined;
+        const lastQuiz = quizzesRes.data?.[0] as { id: number; quizzes?: unknown; created_at?: string } | undefined;
+        if (lastAula) {
+          items.push({
+            id: lastAula.id,
+            title: getTituloAula(lastAula),
+            subtitle: formatRecenteDate(lastAula.created_at),
+            icon: "description",
+            iconBg: "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400",
+            href: `/dashboard/aulas/${lastAula.id}`,
+          });
+        }
+        if (lastPlano) {
+          items.push({
+            id: `plano-${lastPlano.id}`,
+            title: getTituloPlano(lastPlano),
+            subtitle: formatRecenteDate(lastPlano.created_at),
+            icon: "edit_calendar",
+            iconBg: "bg-primary/20 text-primary-dark dark:text-primary group-hover:bg-primary group-hover:text-background-dark",
+            href: `/dashboard/planejamento/${lastPlano.id}`,
+          });
+        }
+        if (lastQuiz) {
+          items.push({
+            id: `quiz-${lastQuiz.id}`,
+            title: getTituloQuiz(lastQuiz),
+            subtitle: formatRecenteDate(lastQuiz.created_at),
+            icon: "task_alt",
+            iconBg: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400",
+            href: `/dashboard/quizzes/${lastQuiz.id}`,
+          });
+        }
+        setRecentItems(items);
+      } catch {
+        setRecentItems([]);
+      }
+      setRecentLoading(false);
+    }
+    fetchRecentes();
   }, []);
 
   return (
@@ -97,15 +193,12 @@ export default function DashboardPage() {
               <p className="text-lg text-slate-600 dark:text-slate-400">
                 <Link
                   href="/chat"
-                  className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                  className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded cursor-pointer"
                 >
                   Como posso ajudar a transformar sua aula hoje?
                 </Link>
               </p>
             </div>
-            <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-              Versão Beta v2.4
-            </span>
           </div>
         </section>
 
@@ -125,7 +218,7 @@ export default function DashboardPage() {
                 <>
                   {"comingSoon" in item && item.comingSoon && (
                     <span className="absolute right-3 top-3 rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-600 dark:text-slate-300">
-                      algo em breve
+                      Em Breve
                     </span>
                   )}
                   <div
@@ -186,30 +279,36 @@ export default function DashboardPage() {
             </Link>
           </div>
           <div className="divide-y divide-slate-100 rounded-md border border-slate-100 bg-white shadow-sm dark:divide-slate-800 dark:border-slate-800 dark:bg-neutral-surface-dark">
-            {recentItems.map((item) => (
-              <Link
-                key={item.title}
-                href="#"
-                className="group flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
-              >
-                <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${item.iconBg}`}
+            {recentLoading ? (
+              <p className="p-4 text-sm text-slate-500 dark:text-slate-400">Carregando…</p>
+            ) : recentItems.length === 0 ? (
+              <p className="p-4 text-sm text-slate-500 dark:text-slate-400">Nenhum item recente. Crie uma aula, plano de aula ou quiz.</p>
+            ) : (
+              recentItems.map((item) => (
+                <Link
+                  key={String(item.id)}
+                  href={item.href}
+                  className="group flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30"
                 >
-                  <span className="material-icons-round">{item.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h5 className="text-sm font-bold text-slate-900 transition-colors group-hover:text-primary dark:text-white">
-                    {item.title}
-                  </h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {item.subtitle}
-                  </p>
-                </div>
-                <span className="material-icons-round text-slate-300 transition-colors group-hover:text-primary">
-                  chevron_right
-                </span>
-              </Link>
-            ))}
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${item.iconBg}`}
+                  >
+                    <span className="material-icons-round">{item.icon}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h5 className="text-sm font-bold text-slate-900 transition-colors group-hover:text-primary dark:text-white">
+                      {item.title}
+                    </h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {item.subtitle}
+                    </p>
+                  </div>
+                  <span className="material-icons-round text-slate-300 transition-colors group-hover:text-primary">
+                    chevron_right
+                  </span>
+                </Link>
+              ))
+            )}
           </div>
         </section>
     </>

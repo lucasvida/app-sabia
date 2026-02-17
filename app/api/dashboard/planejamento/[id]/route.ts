@@ -78,7 +78,15 @@ export async function PATCH(
 
     if (existing?.[COL_JSON as keyof typeof existing]) {
       const raw = existing[COL_JSON as keyof typeof existing];
-      Object.assign(planoJson, typeof raw === "string" ? JSON.parse(raw) : raw);
+      if (typeof raw === "string") {
+        try {
+          Object.assign(planoJson, JSON.parse(raw));
+        } catch {
+          // Valor no banco não é JSON válido (ex.: HTML puro); começa do zero com titulo/conteudo
+        }
+      } else if (raw && typeof raw === "object") {
+        Object.assign(planoJson, raw);
+      }
     }
     if (titulo !== undefined) planoJson.titulo = titulo;
     if (conteudo !== undefined) planoJson.conteudo = conteudo;

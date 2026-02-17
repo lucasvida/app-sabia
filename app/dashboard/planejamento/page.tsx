@@ -183,27 +183,13 @@ export default function PlanejamentoPage() {
                 </span>
                 <div className="flex items-center gap-3">
                   <Link
-                    href={`/planejamento/${plano.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`/dashboard/planejamento/${plano.id}`}
                     className="font-medium text-sky-600 hover:underline dark:text-sky-400"
-                    aria-label={`Abrir link público do plano: ${getTitulo(plano)}`}
+                    aria-label={`Ver plano: ${getTitulo(plano)}`}
                   >
-                    Link público
+                    Ver
                   </Link>
                   <div className="flex items-center rounded-lg border border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-slate-800/80 p-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const url = `${typeof window !== "undefined" ? window.location.origin : ""}/planejamento/${plano.id}`;
-                        navigator.clipboard.writeText(url);
-                      }}
-                      className="cursor-pointer p-1.5 rounded-md text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
-                      title="Copiar link"
-                      aria-label="Copiar link público"
-                    >
-                      <span className="material-icons-outlined text-lg">content_copy</span>
-                    </button>
                     <Link
                       href={`/dashboard/planejamento/${plano.id}/editar`}
                       className="cursor-pointer p-1.5 rounded-md text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
