@@ -175,12 +175,6 @@ Para usar outro backend de IA, altere a `WEBHOOK_URL` ou a lógica dentro de `ap
 
 ---
 
-## Licença
-
-Projeto privado. Uso conforme definido pelos mantenedores.
-
----
-
 ## Contato
 
 Para dúvidas ou sugestões sobre o Sabiá, abra uma issue no repositório.
