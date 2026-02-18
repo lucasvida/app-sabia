@@ -17,7 +17,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
       {isDashboard ? (
         <DashboardLayout>{children}</DashboardLayout>
       ) : isChat ? (
-        <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 min-h-screen">
+        <div className="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
           {children}
         </div>
       ) : isLogin ? (

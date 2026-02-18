@@ -92,7 +92,7 @@ export function ChatMain() {
       : "Nova conversa";
 
   return (
-    <main className="relative flex flex-1 flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
+    <main className="relative flex min-h-0 flex-1 flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Top Bar */}
       <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
         <div className="flex items-center gap-3">
