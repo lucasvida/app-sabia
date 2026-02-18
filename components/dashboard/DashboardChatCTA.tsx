@@ -5,9 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const ILLUSTRATION_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBJqoPHQxqZOd0sttnlnOOxx-WU1ZyU-y_AoRsftvYXrcgTINE8KRy0k4pNdMZPWeyYOs1zZncKta_WFdlwIfISeUZVuC6zBTp96blRRG-6uozQaAZ3YchEZywbHNkuBLQXQF-eU8nCx0aqLVHlmmkPbSZCmGceRAh7xUzm_leH43elh_WKCNHgQqYE7A25KpGgbiK9eoloNZJdZC_0HHmn99oXxiyfjfAiOKtTEYHySJGC7Co9xBapEUs0ZMGfsUqvLeLvtSz5E80";
-
 const PENDING_PROMPT_KEY = "sabia_pending_prompt";
 
 export function DashboardChatCTA() {
@@ -62,27 +59,28 @@ export function DashboardChatCTA() {
                 className="absolute inset-y-2 right-2 flex items-center gap-2 rounded-md bg-primary px-6 font-bold text-background-dark transition-colors hover:bg-primary-dark cursor-pointer"
               >
                 <span>Enviar</span>
-                <span className="material-icons-round text-sm">send</span>
+                <span className="material-icons-outlined text-lg" aria-hidden="true">arrow_upward</span>
               </button>
             </form>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              Ou{" "}
-              <Link href="/chat" className="font-medium text-primary hover:underline cursor-pointer">
-                abra o chat
+              Ou abra o{" "}
+              <Link
+                href="/chat"
+                className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded cursor-pointer"
+              >
+                chat
               </Link>{" "}
               sem digitar nada.
             </p>
           </div>
-          <div className="relative hidden h-48 w-48 shrink-0 md:block">
-            <div className="absolute inset-0 rounded-full bg-linear-to-br from-primary/30 to-yellow-200/30 blur-2xl" />
-            <Image
-              src={ILLUSTRATION_URL}
-              alt="Ilustração do assistente Sabiá - educação e tecnologia"
-              className="relative z-10 h-full w-full rounded-md object-contain opacity-90 drop-shadow-2xl mix-blend-hard-light"
-              width={192}
-              height={192}
-              unoptimized
-            />
+          <div className="relative hidden md:flex h-44 w-44 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 ring-4 ring-slate-100 dark:ring-slate-800" aria-hidden="true">
+            <span
+              className="material-icons-outlined text-slate-400 dark:text-slate-500 inline-block origin-center"
+              style={{ fontSize: "5em", transform: "scale(1.5)" }}
+              aria-hidden="true"
+            >
+              school
+            </span>
           </div>
         </div>
       </div>

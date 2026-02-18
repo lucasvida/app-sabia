@@ -6,12 +6,10 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
-const navLinks = [
+const navLinks: { name: string; href: string; external?: boolean }[] = [
   { name: "Início", href: "/" },
   { name: "Sobre", href: "/sobre" },
-  { name: "Documentação ↗", href: "/documentacao" },
-  { name: "Contato", href: "/contato" },
-
+  { name: "Documentação ↗", href: "https://docs.sabiaedu.ia.br/", external: true },
 ];
 
 export function HomeHeader() {
@@ -69,19 +67,35 @@ export function HomeHeader() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-sm font-bold transition-colors cursor-pointer ${
-                  pathname === link.href
-                    ? "text-primary"
-                    : currentTheme === "dark" ? "text-white" : "text-slate-600 hover:text-primary"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const linkClass = `text-sm font-bold transition-colors cursor-pointer ${
+                !link.external && pathname === link.href
+                  ? "text-primary"
+                  : currentTheme === "dark" ? "text-white" : "text-slate-600 hover:text-primary"
+              }`;
+              if (link.external) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={linkClass}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Actions */}
@@ -100,20 +114,10 @@ export function HomeHeader() {
             </button>
             <Link
               href="/login"
-              className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-md transition-colors cursor-pointer ${
-                currentTheme === "dark" 
-                  ? "text-white hover:bg-slate-800" 
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
+              className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-slate-900 px-6 py-2.5 rounded-md font-bold shadow-lg shadow-primary/25 active:scale-95 transition-all cursor-pointer"
             >
               <span className="material-icons-outlined text-lg">login</span>
-              Entrar
-            </Link>
-            <Link
-              href="/login"
-              className="bg-primary hover:bg-primary-dark text-slate-900 px-6 py-2.5 rounded-md font-bold shadow-lg shadow-primary/25 active:scale-95 transition-all cursor-pointer"
-            >
-              Começar Agora
+              Fazer Login
             </Link>
           </div>
 
@@ -139,30 +143,36 @@ export function HomeHeader() {
       >
         <div className="absolute inset-0 bg-white p-8 pt-24">
           <div className="flex flex-col gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-2xl font-semibold text-slate-800 cursor-pointer"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-2xl font-semibold text-slate-800 cursor-pointer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-2xl font-semibold text-slate-800 cursor-pointer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              )
+            )}
             <hr className="border-slate-100" />
             <Link
               href="/login"
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-md border-2 border-slate-100 font-bold text-slate-700 cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-slate-900 rounded-md font-bold shadow-lg shadow-primary/30 cursor-pointer"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="material-icons-outlined">login</span> Entrar no Sabiá
-            </Link>
-            <Link
-              href="/login"
-              className="w-full py-4 bg-primary text-slate-900 rounded-md font-bold shadow-lg shadow-primary/30 text-center cursor-pointer"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Teste Grátis Agora
+              <span className="material-icons-outlined">login</span> Fazer Login
             </Link>
           </div>
         </div>

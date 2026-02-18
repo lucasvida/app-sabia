@@ -5,11 +5,10 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeSelector } from "@/components/theme/ThemeSelector";
 
-const navItems = [
+const navItems: { href: string; label: string; external?: boolean }[] = [
   { href: "/", label: "Início" },
   { href: "/sobre", label: "Sobre" },
-  { href: "/documentacao", label: "Documentação ↗" },
-  { href: "/contato", label: "Contato" },
+  { href: "https://docs.sabiaedu.ia.br/", label: "Documentação ↗", external: true },
 ];
 
 export function Header() {
@@ -39,18 +38,32 @@ export function Header() {
 
         {/* Links centrais */}
         <div className="hidden md:flex items-center gap-1">
-          {navItems.map(({ href, label }) => {
+          {navItems.map(({ href, label, external }) => {
             const isActive =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
+              !external && (href === "/" ? pathname === "/" : pathname.startsWith(href));
+            const linkClass = `px-4 py-2.5 text-sm font-medium transition-colors rounded-md border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer ${
+              isActive
+                ? "text-primary border-primary"
+                : "border-transparent text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+            }`;
+            if (external) {
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  {label}
+                </a>
+              );
+            }
             return (
               <Link
                 key={href}
                 href={href}
-                className={`px-4 py-2.5 text-sm font-medium transition-colors rounded-md border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer ${
-                  isActive
-                    ? "text-primary border-primary"
-                    : "border-transparent text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
+                className={linkClass}
               >
                 {label}
               </Link>
@@ -58,20 +71,14 @@ export function Header() {
           })}
         </div>
 
-        {/* Direita: tema + Entrar + Começar Agora */}
+        {/* Direita: tema + Fazer Login */}
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           <ThemeSelector />
           <Link
-            href="/"
-            className="hidden sm:inline-flex text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            href="/login"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-bold text-slate-900 shadow-lg shadow-primary/25 transition hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98] cursor-pointer"
           >
-            Entrar
-          </Link>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-bold text-slate-900 shadow-lg shadow-primary/25 transition hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98] cursor-pointer"
-          >
-            Começar Agora
+            Fazer Login
           </Link>
         </div>
       </nav>

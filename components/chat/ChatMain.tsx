@@ -2,28 +2,34 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useChat } from "./ChatContext";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 const PENDING_PROMPT_KEY = "sabia_pending_prompt";
-
-const AI_AVATAR =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuA6I5yYNPqFc18oY-B50JVJfR7bkQq9B1eq9CPO9fur89_tc75h9oAYN1-p16SvjWt29uaBf43O3Y_-SEirc3WSqadDdczDBeEPWVAJg0874pPwDfS1Ex4pA3GHumIe-a0k8OC_ikmMGyMtdHFiLtcPXJijgOQsxBzsrBSa43sBhhT0aI2FJpRaJWiqq62kxak0_gE88znz3aVWyJur3_T-GCt4nwPs3TuFY417-fjY5I9jbpfEAILfC1K67shEAYAhiFV1bOivdS0";
 
 const USER_AVATAR =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD_SIsSxs-0XPQBguo2ZTPCT-hIOT788173C1npTJ5dpbJhf5nxB3D6qxE6HBI5jI2yRchpSXB0ft4hgnD009tdJ7Qdjs504Rt8uABaD7eBKHkk_wdTudXbwEIe_5XsQNkjIRXjo8pZzQn_1qE-SsVyuPhq8moYtuZjYfG7rQe3f_NytoqfW-rO_9eLRfAWGSO0_wjdw9ex8OGRbzzo-RVE_8CdpsnaZ4dLwZ1YT4nJhLEX40tLNBYKxYdCFtU0h6hN9hEzaqfygU4";
 
-type Message = { role: "user" | "assistant"; content: string };
+const QUICK_ACTIONS = [
+  { label: "Salvar Aula", prompt: "Salvar Aula", icon: "class" },
+  { label: "Salvar Plano", prompt: "Salvar Plano de Aula", icon: "edit_calendar" },
+  { label: "Salvar Quiz", prompt: "Salvar Quiz", icon: "quiz" },
+];
 
-function getResponseText(data: { response?: string }): string {
-  return typeof data?.response === "string" ? data.response : "Não foi possível obter resposta.";
-}
+type ChatMainProps = {
+  onMenuClick?: () => void;
+};
 
-export function ChatMain() {
-  const [messages, setMessages] = useState<Message[]>([]);
+export function ChatMain({ onMenuClick }: ChatMainProps) {
+  const { messages, loading, error, thinkingPhrase, sendMessage } = useChat();
+  const { setTheme, resolvedTheme } = useTheme();
+  const currentTheme = resolvedTheme || "light";
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initialLoadRef = useRef(false);
+
+  const toggleTheme = () => setTheme(currentTheme === "dark" ? "light" : "dark");
 
   const scrollToBottom = () => {
     containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
@@ -32,40 +38,6 @@ export function ChatMain() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, loading]);
-
-  const sendMessage = async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
-
-    setError(null);
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        const errMsg = typeof data?.error === "string" ? data.error : "Erro ao conversar. Tente novamente.";
-        setError(errMsg);
-        setMessages((prev) => prev.slice(0, -1));
-        return;
-      }
-
-      const responseText = getResponseText(data);
-      setMessages((prev) => [...prev, { role: "assistant", content: responseText }]);
-    } catch {
-      setError("Erro de conexão. Tente novamente.");
-      setMessages((prev) => prev.slice(0, -1));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (initialLoadRef.current) return;
@@ -76,7 +48,7 @@ export function ChatMain() {
       window.sessionStorage.removeItem(PENDING_PROMPT_KEY);
       sendMessage(pending);
     }
-  }, []);
+  }, [sendMessage]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,29 +66,47 @@ export function ChatMain() {
   return (
     <main className="relative flex min-h-0 flex-1 flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Top Bar */}
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80 md:px-6">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="shrink-0 rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden cursor-pointer"
+              aria-label="Abrir menu"
+            >
+              <span className="material-icons-outlined">menu</span>
+            </button>
+          )}
+          <span className="hidden text-sm font-medium text-gray-500 dark:text-gray-400 md:inline">
             Conversa atual:
           </span>
-          <span className="max-w-[280px] truncate text-sm font-bold text-gray-900 dark:text-white">
+          <span className="truncate text-sm font-bold text-gray-900 dark:text-white md:max-w-[280px]">
             {conversationTitle}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 md:gap-4">
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-primary hover:underline cursor-pointer"
+            aria-label="Voltar ao dashboard"
+          >
+            <span className="hidden md:inline">Voltar</span>
+            <span className="material-icons-outlined md:hidden">home</span>
+          </Link>
           <button
             type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
-            aria-label="Exportar"
+            onClick={toggleTheme}
+            className={`p-2 rounded-full transition-colors cursor-pointer ${
+              currentTheme === "dark"
+                ? "text-white hover:bg-slate-800"
+                : "text-slate-500 hover:bg-slate-100"
+            }`}
+            aria-label={currentTheme === "dark" ? "Modo claro" : "Modo escuro"}
           >
-            <span className="material-icons-outlined">ios_share</span>
-          </button>
-          <button
-            type="button"
-            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-500 dark:hover:bg-white/5 cursor-pointer"
-            aria-label="Limpar chat"
-          >
-            <span className="material-icons-outlined">delete_outline</span>
+            <span className="material-icons-outlined">
+              {currentTheme === "dark" ? "light_mode" : "dark_mode"}
+            </span>
           </button>
         </div>
       </header>
@@ -125,7 +115,7 @@ export function ChatMain() {
       <div
         ref={containerRef}
         id="chat-container"
-        className="flex-1 space-y-8 overflow-y-auto p-6 scroll-smooth md:p-10"
+        className="flex-1 space-y-6 overflow-y-auto p-4 scroll-smooth md:space-y-8 md:p-10"
       >
         <div className="flex justify-center pb-8">
           <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500 dark:bg-white/5 dark:text-gray-400">
@@ -144,40 +134,38 @@ export function ChatMain() {
 
         {messages.map((msg, i) =>
           msg.role === "user" ? (
-            <div key={i} className="group mx-auto flex max-w-4xl flex-row-reverse gap-4">
+            <div key={i} className="group mx-auto flex max-w-4xl flex-row-reverse gap-2 md:gap-4">
               <div className="shrink-0">
                 <Image
                   src={USER_AVATAR}
                   alt="Avatar do usuário"
-                  className="h-10 w-10 rounded-full object-cover shadow-sm"
+                  className="h-8 w-8 rounded-full object-cover shadow-sm md:h-10 md:w-10"
                   width={40}
                   height={40}
                   unoptimized
                 />
               </div>
               <div className="flex-1 space-y-2 text-right">
-                <div className="inline-block max-w-[85%] rounded-md rounded-tr-none bg-primary/20 p-4 text-left text-gray-900 dark:text-white">
+                <div className="inline-block max-w-[85%] rounded-md rounded-tr-none bg-primary/20 p-3 text-left text-sm text-gray-900 dark:text-white md:p-4 md:text-base">
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                 </div>
               </div>
             </div>
           ) : (
-            <div key={i} className="mx-auto flex max-w-4xl gap-4">
-              <div className="shrink-0">
-                <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-primary to-green-600 shadow-md">
-                  <Image
-                    src={AI_AVATAR}
-                    alt="Avatar do assistente Sabiá"
-                    className="h-full w-full object-cover opacity-90 mix-blend-overlay"
-                    width={40}
-                    height={40}
-                    unoptimized
-                  />
-                </div>
+            <div key={i} className="mx-auto flex max-w-4xl gap-2 md:gap-4">
+              <div className="shrink-0 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md md:h-10 md:w-10">
+                <Image
+                  src="/favicon.png"
+                  alt="Sabiá"
+                  className="h-6 w-6 object-contain md:h-7 md:w-7"
+                  width={28}
+                  height={28}
+                  unoptimized
+                />
               </div>
-              <div className="flex-1 space-y-2">
-                <span className="font-bold text-gray-900 dark:text-white">Sabiá</span>
-                <div className="markdown-content prose prose-sm max-w-none rounded-md rounded-tl-none border border-slate-200 bg-white p-6 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+              <div className="flex-1 space-y-1 md:space-y-2">
+                <span className="text-xs font-bold text-gray-900 dark:text-white md:text-sm">Sabiá</span>
+                <div className="markdown-content prose prose-sm max-w-none rounded-md rounded-tl-none border border-slate-200 bg-white p-3 text-sm text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 md:p-6 md:text-base">
                   <div className="whitespace-pre-wrap">{msg.content}</div>
                 </div>
               </div>
@@ -186,14 +174,33 @@ export function ChatMain() {
         )}
 
         {loading && (
-          <div className="mx-auto flex max-w-4xl gap-4">
+          <div className="mx-auto flex max-w-4xl gap-4 animate-in fade-in duration-300">
             <div className="shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-primary to-green-600 shadow-md">
-                <span className="material-icons-outlined text-lg text-white">smart_toy</span>
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary shadow-md animate-pulse ring-2 ring-primary/30 ring-offset-2 dark:ring-offset-slate-950">
+                <Image
+                  src="/favicon.png"
+                  alt=""
+                  className="h-7 w-7 object-contain"
+                  width={28}
+                  height={28}
+                  unoptimized
+                />
               </div>
             </div>
-            <div className="flex-1 rounded-md rounded-tl-none border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-              <span className="text-gray-500 dark:text-gray-400">Sabiá está pensando...</span>
+            <div className="flex-1 overflow-hidden rounded-md rounded-tl-none border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex min-h-10 items-center gap-2">
+                <span className="text-gray-500 dark:text-gray-400 transition-opacity duration-300">
+                  {thinkingPhrase ?? "Sabiá está pensando..."}
+                </span>
+                <span className="flex gap-1" aria-hidden="true">
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:0ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:150ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:300ms]" />
+                </span>
+              </div>
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                <div className="h-full w-0 rounded-full bg-primary/60 animate-thinking-progress" />
+              </div>
             </div>
           </div>
         )}
@@ -208,26 +215,40 @@ export function ChatMain() {
       </div>
 
       {/* Input */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-6 dark:from-slate-950 dark:via-slate-950">
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent p-4 dark:from-slate-950 dark:via-slate-950 md:p-6">
         <div className="pointer-events-auto mx-auto max-w-4xl">
+          {/* Botões de ações rápidas no mobile */}
+          <div className="mb-2 flex gap-2 overflow-x-auto pb-2 md:hidden">
+            {QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.prompt}
+                type="button"
+                onClick={() => sendMessage(action.prompt)}
+                className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+              >
+                <span className="material-icons-outlined text-sm">{action.icon}</span>
+                <span>{action.label}</span>
+              </button>
+            ))}
+          </div>
           <form
             onSubmit={handleSubmit}
             className="relative flex items-end gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-xl transition-shadow focus-within:ring-2 focus-within:ring-primary/50 dark:border-slate-800 dark:bg-slate-900"
           >
-            <button
-              type="button"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-gray-50 hover:text-primary dark:hover:bg-white/5 cursor-pointer"
-              aria-label="Anexar"
-            >
-              <span className="material-icons-outlined">attach_file</span>
-            </button>
             <textarea
-              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-2 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500"
-              placeholder="Digite sua mensagem ou peça uma atividade..."
+              className="max-h-32 w-full resize-none rounded border-none bg-transparent py-3 px-3 leading-relaxed text-gray-900 placeholder-gray-400 focus:ring-0 dark:text-white dark:placeholder-gray-500 md:px-4"
+              placeholder="Digite sua mensagem..."
               rows={1}
               style={{ minHeight: "48px" }}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  const form = e.currentTarget.form;
+                  if (form && message.trim()) form.requestSubmit();
+                }
+              }}
               disabled={loading}
             />
             <button
@@ -236,8 +257,8 @@ export function ChatMain() {
               className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary text-black shadow-lg shadow-primary/20 transition-transform hover:bg-primary-dark active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               aria-label="Enviar"
             >
-              <span className="material-icons-outlined transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                send
+              <span className="material-icons-outlined transition-transform group-hover:translate-y-0.5">
+                arrow_upward
               </span>
             </button>
           </form>

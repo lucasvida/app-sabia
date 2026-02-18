@@ -23,6 +23,19 @@ function parseAulaField(aula: Aula): Record<string, any> {
   return (typeof raw === "object" ? raw : {}) as Record<string, any>;
 }
 
+function formatDate(s: string | undefined): string {
+  if (!s) return "";
+  try {
+    return new Date(s).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
+}
+
 export default function AulaPublicaPage() {
   const params = useParams();
   const id = params?.id as string | undefined;
@@ -85,6 +98,7 @@ export default function AulaPublicaPage() {
   const { titulo: _t, title: _t2, ...resto } = json;
   const conteudo = json.conteudo ?? json.content ?? json.html ?? json.body ?? "";
   const nomeProfessor = aula.nome_professor ?? "";
+  const dataExibicao = formatDate((aula.data_aula as string) ?? (aula.created_at as string));
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-8 md:py-12">
@@ -98,6 +112,9 @@ export default function AulaPublicaPage() {
         Criado por <span className="font-semibold text-slate-700 dark:text-slate-300">Sabiá</span>
         {nomeProfessor && (
           <>, revisado por <span className="font-semibold text-slate-700 dark:text-slate-300">Prof. {nomeProfessor}</span></>
+        )}
+        {dataExibicao && (
+          <> · <span>{dataExibicao}</span></>
         )}
       </p>
 

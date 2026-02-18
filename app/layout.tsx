@@ -10,7 +10,7 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Sabiá - Login para Professores",
+  title: "Sabiá - Assistente Pedagógico Inteligente",
   description:
     "Assistente Pedagógico Inteligente. Planeje aulas, corrija atividades e inspire seus alunos.",
   icons: {
@@ -59,6 +59,7 @@ export default function RootLayout({
         />
       </head>
       <body
+        suppressHydrationWarning
         className={`${lexend.variable} font-display bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white min-h-screen antialiased transition-colors duration-300`}
       >
         <ClientLayout>{children}</ClientLayout>

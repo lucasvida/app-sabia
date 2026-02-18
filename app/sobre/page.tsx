@@ -1,9 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Footer } from "@/components/home/Footer";
 
 const IMAGE_SOBRE =
-  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80";
+  "cover-sobre.png";
+
+
 
 const features = [
   {
@@ -35,7 +36,7 @@ const stats = [
 
 const team = [
   {
-    name: "Jhonnathan de Sousa",
+    name: "Jhonnathan Sousa",
     role: "Desenvolvimento",
     photo: "/jhonnathan-de-sousa.png",
     linkedin: "#",
@@ -57,14 +58,14 @@ const team = [
   },
   {
     name: "Marcos Augusto",
-    role: "Desenvolvimento",
+    role: "QA Tester",
     photo: "/macos.png",
     linkedin: "https://www.linkedin.com/in/marcos-augusto-santello-78a5881a3/",
     github: "https://github.com/MarcosAugusto10",
   },
   {
     name: "Lucas Vida",
-    role: "Desenvolvimento",
+    role: "UX/UI Designer",
     photo: "/lucas-vida.png",
     linkedin: "https://www.linkedin.com/in/lucas-vida/",
     github: "https://github.com/lucasvida",
@@ -83,9 +84,9 @@ export default function SobrePage() {
               <Image
                 src={IMAGE_SOBRE}
                 alt="Ensino que floresce com inteligência"
-                className="aspect-4/3 w-full object-cover"
-                width={800}
-                height={600}
+                className="w-full object-contain"
+                width={450}
+                height={450}
                 unoptimized
               />
               <div className="absolute inset-x-0 bottom-0 rounded-b-2xl bg-black/60 px-6 py-5">
@@ -95,8 +96,8 @@ export default function SobrePage() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/50">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary/30 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-primary/40">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary">
                   <span className="material-icons-outlined text-2xl text-white">
                     school
@@ -111,7 +112,7 @@ export default function SobrePage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/50">
+              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary/30 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-primary/40">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary">
                   <span className="material-icons-outlined text-2xl text-white">
                     menu_book
@@ -126,6 +127,48 @@ export default function SobrePage() {
                   </p>
                 </div>
               </div>
+              <a
+                href="https://github.com/sabiaedu/app-sabia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary/30 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-primary/40"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-700 dark:bg-slate-600">
+                  <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Código
+                  </p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    App no GitHub
+                  </p>
+                </div>
+                <span className="material-icons-outlined ml-auto text-slate-400">open_in_new</span>
+              </a>
+              <a
+                href="https://github.com/sabiaedu/sabia-api"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary/30 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-primary/40"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-700 dark:bg-slate-600">
+                  <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    API
+                  </p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    API no GitHub
+                  </p>
+                </div>
+                <span className="material-icons-outlined ml-auto text-slate-400">open_in_new</span>
+              </a>
             </div>
           </div>
 
